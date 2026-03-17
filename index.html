@@ -1,0 +1,1563 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rádio — Casa de Oração do Senhor Jesus Cristo</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --gold:#C9A84C;--gold-light:#F0D080;--gold-dim:rgba(201,168,76,0.15);
+  --deep:#0D1117;--deep2:#161C26;--deep3:#1E2736;
+  --text:#F0EDE6;--muted:#9A9488;
+  --red:#E74C3C;--green:#27AE60;--blue:#3498DB;
+  --border:rgba(201,168,76,0.2);
+}
+body{font-family:'DM Sans',sans-serif;background:var(--deep);color:var(--text);min-height:100vh;overflow-x:hidden;}
+
+/* ── SITE PÚBLICO ── */
+#site-publico{display:block;}
+#area-admin{display:none;}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;background:rgba(13,17,23,0.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+.logo{display:flex;align-items:center;gap:12px;}
+.logo-icon{width:42px;height:42px;background:linear-gradient(135deg,var(--gold),var(--gold-light));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.logo-text{font-family:'Playfair Display',serif;font-size:0.78rem;font-weight:700;color:var(--gold-light);line-height:1.3;max-width:180px;}
+.logo-sub{font-size:0.62rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:2px;}
+nav ul{list-style:none;display:flex;gap:1.8rem;}
+nav ul a{text-decoration:none;color:var(--muted);font-size:0.83rem;transition:color 0.2s;}
+nav ul a:hover{color:var(--gold-light);}
+.nav-btn{background:var(--gold)!important;color:var(--deep)!important;padding:0.42rem 1.1rem;border-radius:20px;font-weight:500!important;font-size:0.8rem!important;}
+
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:7rem 2rem 4rem;text-align:center;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 40%,rgba(201,168,76,0.09) 0%,transparent 70%),radial-gradient(ellipse 30% 40% at 80% 80%,rgba(201,168,76,0.05) 0%,transparent 60%);}
+#hero-bg-img{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0.15;display:none;}
+.hero-lines{position:absolute;inset:0;opacity:0.03;background-image:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(201,168,76,1) 39px,rgba(201,168,76,1) 40px);}
+.hero-content{position:relative;max-width:760px;margin:0 auto;}
+.badge{display:inline-flex;align-items:center;gap:8px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);border-radius:20px;padding:0.32rem 1rem;font-size:0.72rem;color:var(--gold-light);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:1.5rem;}
+.live-dot{width:7px;height:7px;background:var(--red);border-radius:50%;animation:pulse 1.5s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.5;transform:scale(1.3);}}
+.church-name-small{font-size:0.7rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:0.8rem;}
+h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,5.5vw,3.6rem);font-weight:900;line-height:1.15;margin-bottom:0.5rem;}
+h1 .linha1{display:block;color:var(--text);}
+h1 .linha2{display:block;color:var(--gold);font-style:italic;}
+h1 .linha3{display:block;color:var(--text);}
+.hero-subtitle{font-family:'Playfair Display',serif;font-style:italic;font-size:1rem;color:var(--muted);margin:1rem 0 0.4rem;}
+.hero-verse{font-size:0.72rem;color:var(--gold);letter-spacing:1.5px;margin-bottom:2rem;}
+.hero-desc{font-size:0.95rem;color:var(--muted);line-height:1.75;max-width:520px;margin:0 auto 2.5rem;}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:var(--deep);padding:0.78rem 2rem;border-radius:30px;font-weight:500;font-size:0.92rem;border:none;cursor:pointer;transition:background 0.2s,transform 0.15s;text-decoration:none;}
+.btn-primary:hover{background:var(--gold-light);transform:translateY(-2px);}
+.btn-secondary{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--text);padding:0.78rem 2rem;border-radius:30px;font-size:0.92rem;border:1px solid rgba(201,168,76,0.35);cursor:pointer;transition:border-color 0.2s,color 0.2s;text-decoration:none;}
+.btn-secondary:hover{border-color:var(--gold);color:var(--gold-light);}
+
+.admin-bar{background:var(--deep3);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:0.9rem 2rem;display:none;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;}
+.admin-bar.visivel{display:flex;}
+.admin-label{font-size:0.78rem;color:var(--gold);font-weight:500;white-space:nowrap;}
+.admin-input-wrap{display:flex;align-items:center;gap:8px;flex:1;max-width:520px;}
+.admin-input{flex:1;background:var(--deep2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:0.85rem;padding:0.5rem 0.9rem;outline:none;transition:border-color 0.2s;font-family:'DM Sans',sans-serif;}
+.admin-input::placeholder{color:var(--muted);}
+.admin-input:focus{border-color:var(--gold);}
+.admin-go-btn{background:var(--gold);color:var(--deep);border:none;border-radius:8px;padding:0.5rem 1.1rem;font-size:0.85rem;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.2s;}
+.admin-go-btn:hover{background:var(--gold-light);}
+.admin-stop-btn{background:transparent;color:var(--red);border:1px solid rgba(231,76,60,0.4);border-radius:8px;padding:0.5rem 1rem;font-size:0.82rem;cursor:pointer;font-family:'DM Sans',sans-serif;display:none;}
+.admin-feedback{font-size:0.75rem;padding:0.3rem 0.8rem;border-radius:6px;display:none;white-space:nowrap;}
+.admin-feedback.ok{background:rgba(39,174,96,0.15);color:var(--green);border:1px solid rgba(39,174,96,0.3);display:inline-block;}
+.admin-feedback.erro{background:rgba(231,76,60,0.15);color:var(--red);border:1px solid rgba(231,76,60,0.3);display:inline-block;}
+
+.player-section{background:var(--deep2);border-bottom:1px solid var(--border);padding:3rem 2rem;display:flex;align-items:center;justify-content:center;}
+.player-wrapper{width:100%;max-width:760px;}
+.player-header{display:flex;align-items:center;gap:10px;margin-bottom:1rem;}
+.player-live-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(231,76,60,0.15);border:1px solid rgba(231,76,60,0.4);border-radius:20px;padding:0.25rem 0.8rem;font-size:0.7rem;color:var(--red);letter-spacing:1.5px;text-transform:uppercase;font-weight:500;}
+.player-program-name{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--text);}
+.youtube-container{position:relative;width:100%;padding-bottom:56.25%;border-radius:16px;overflow:hidden;border:1px solid var(--border);background:#000;min-height:180px;}
+.youtube-container iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none;}
+.offline-screen{position:absolute;top:0;left:0;right:0;bottom:0;background:var(--deep3);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;text-align:center;padding:2rem;}
+.offline-icon{font-size:3rem;opacity:0.35;}
+.offline-title{font-family:'Playfair Display',serif;font-size:1.15rem;color:var(--text);}
+.offline-sub{font-size:0.83rem;color:var(--muted);line-height:1.65;max-width:340px;}
+.offline-next{background:var(--gold-dim);border:1px solid var(--border);border-radius:10px;padding:0.7rem 1.4rem;font-size:0.8rem;color:var(--gold-light);}
+.player-footer{display:flex;align-items:center;justify-content:space-between;margin-top:1rem;flex-wrap:wrap;gap:0.5rem;}
+.player-hint{font-size:0.74rem;color:var(--muted);}
+.youtube-link{display:inline-flex;align-items:center;gap:6px;font-size:0.74rem;color:var(--gold);text-decoration:none;}
+
+.section{max-width:1100px;margin:0 auto;padding:5rem 2rem;}
+.section-label{font-size:0.7rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem;}
+.section-title{font-family:'Playfair Display',serif;font-size:clamp(1.5rem,4vw,2.2rem);font-weight:700;color:var(--text);margin-bottom:2.5rem;}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.2rem;}
+.program-card{background:var(--deep2);border:1px solid var(--border);border-radius:14px;padding:1.4rem;transition:border-color 0.2s,transform 0.15s;}
+.program-card:hover{border-color:rgba(201,168,76,0.4);transform:translateY(-4px);}
+.program-time{font-size:0.72rem;color:var(--gold);letter-spacing:1px;margin-bottom:0.4rem;}
+.program-name{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:var(--text);margin-bottom:0.3rem;}
+.program-host{font-size:0.78rem;color:var(--muted);margin-bottom:0.7rem;}
+.program-tag{display:inline-block;background:var(--gold-dim);border:1px solid rgba(201,168,76,0.25);color:var(--gold-light);font-size:0.68rem;padding:0.18rem 0.65rem;border-radius:12px;}
+.about-section{background:var(--deep2);border-top:1px solid rgba(201,168,76,0.1);}
+.about-inner{max-width:1100px;margin:0 auto;padding:5rem 2rem;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:2rem;}
+.stat-box{background:var(--deep3);border:1px solid var(--border);border-radius:12px;padding:1.1rem;text-align:center;}
+.stat-num{font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:900;color:var(--gold);}
+.stat-label{font-size:0.73rem;color:var(--muted);}
+footer{background:var(--deep);border-top:1px solid var(--border);text-align:center;padding:2rem;color:var(--muted);font-size:0.78rem;}
+footer span{color:var(--gold);}
+
+/* ── ÁREA ADMIN GERAL ── */
+#area-admin{background:var(--deep);}
+#login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--deep);background-image:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(201,168,76,0.03) 39px,rgba(201,168,76,0.03) 40px);}
+.login-card{background:var(--deep2);border:1px solid var(--border);border-radius:20px;padding:2.5rem 2rem;width:100%;max-width:380px;text-align:center;}
+.login-icon{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 1.2rem;}
+.login-title{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;margin-bottom:0.3rem;}
+.login-sub{font-size:0.8rem;color:var(--muted);margin-bottom:2rem;}
+.field{margin-bottom:1rem;text-align:left;}
+.field label{display:block;font-size:0.73rem;color:var(--gold);letter-spacing:1px;text-transform:uppercase;margin-bottom:0.4rem;}
+.field input{width:100%;background:var(--deep3);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:0.9rem;padding:0.7rem 1rem;outline:none;font-family:'DM Sans',sans-serif;transition:border-color 0.2s;}
+.field input:focus{border-color:var(--gold);}
+.login-btn{width:100%;background:var(--gold);color:var(--deep);border:none;border-radius:10px;padding:0.8rem;font-size:0.95rem;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.2s;margin-top:0.5rem;}
+.login-btn:hover{background:var(--gold-light);}
+.login-error{background:rgba(231,76,60,0.12);border:1px solid rgba(231,76,60,0.3);color:var(--red);font-size:0.8rem;border-radius:8px;padding:0.6rem 1rem;margin-top:1rem;display:none;}
+.voltar-site{display:inline-block;margin-top:1.2rem;font-size:0.78rem;color:var(--muted);cursor:pointer;text-decoration:underline;}
+
+/* ── PAINEL ADMIN / PASTOR ── */
+#painel-screen{display:none;min-height:100vh;}
+.adm-nav{background:var(--deep2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;position:sticky;top:0;z-index:50;}
+.adm-nav-logo{display:flex;align-items:center;gap:10px;}
+.adm-nav-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--gold),var(--gold-light));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;}
+.adm-nav-title{font-family:'Playfair Display',serif;font-size:0.85rem;font-weight:700;color:var(--gold-light);}
+.adm-nav-sub{font-size:0.6rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;}
+.adm-nav-btns{display:flex;gap:0.8rem;}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:0.38rem 0.9rem;font-size:0.78rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:border-color 0.2s,color 0.2s;}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold-light);}
+.btn-danger{background:transparent;border:1px solid rgba(231,76,60,0.3);color:var(--red);border-radius:8px;padding:0.38rem 0.9rem;font-size:0.78rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.2s;}
+.btn-danger:hover{background:rgba(231,76,60,0.1);}
+
+.adm-layout{display:flex;min-height:calc(100vh - 62px);}
+.sidebar{width:210px;flex-shrink:0;background:var(--deep2);border-right:1px solid var(--border);padding:1.2rem 0;}
+.sb-section{font-size:0.63rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:0 1.1rem;margin:1rem 0 0.4rem;}
+.sb-item{display:flex;align-items:center;gap:9px;padding:0.6rem 1.1rem;font-size:0.83rem;color:var(--muted);cursor:pointer;border-left:2px solid transparent;transition:background 0.15s,color 0.15s;user-select:none;}
+.sb-item:hover{background:var(--gold-dim);color:var(--text);}
+.sb-item.ativo{background:var(--gold-dim);color:var(--gold-light);border-left-color:var(--gold);}
+
+.adm-main{flex:1;padding:2rem;overflow-y:auto;}
+.painel{display:none;}
+.painel.ativo{display:block;}
+.ph{margin-bottom:1.8rem;}
+.ph-titulo{font-family:'Playfair Display',serif;font-size:1.45rem;font-weight:700;color:var(--text);}
+.ph-desc{font-size:0.82rem;color:var(--muted);margin-top:0.3rem;}
+
+.card{background:var(--deep2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1.5rem;}
+.card-titulo{font-size:0.75rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+.fr.um{grid-template-columns:1fr;}
+.fr.tres{grid-template-columns:1fr 1fr 1fr;}
+.fr.quatro{grid-template-columns:1fr 1fr 1fr 1fr;}
+.fg{display:flex;flex-direction:column;gap:0.35rem;}
+.fg label{font-size:0.72rem;color:var(--muted);}
+.fg input,.fg select,.fg textarea{background:var(--deep3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:0.86rem;padding:0.58rem 0.9rem;outline:none;font-family:'DM Sans',sans-serif;transition:border-color 0.2s;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--gold);}
+.fg textarea{resize:vertical;min-height:80px;}
+.fg select option{background:var(--deep3);}
+
+.btn-salvar{background:var(--gold);color:var(--deep);border:none;border-radius:8px;padding:0.62rem 1.4rem;font-size:0.87rem;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.2s;display:inline-flex;align-items:center;gap:6px;}
+.btn-salvar:hover{background:var(--gold-light);}
+.btn-perigo{background:transparent;color:var(--red);border:1px solid rgba(231,76,60,0.3);border-radius:8px;padding:0.5rem 1rem;font-size:0.82rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.2s;}
+.btn-perigo:hover{background:rgba(231,76,60,0.1);}
+.btn-outline{background:transparent;color:var(--gold);border:1px solid var(--border);border-radius:8px;padding:0.6rem 1rem;font-size:0.83rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.2s;width:100%;}
+.btn-outline:hover{background:var(--gold-dim);}
+
+.live-status{display:flex;align-items:center;gap:10px;background:var(--deep3);border-radius:10px;padding:1rem 1.2rem;margin-bottom:1.2rem;font-size:0.85rem;}
+.sdot{width:10px;height:10px;border-radius:50%;background:var(--muted);flex-shrink:0;}
+.sdot.on{background:var(--red);animation:pulse 1.5s infinite;}
+
+.prog-item{background:var(--deep3);border:1px solid var(--border);border-radius:10px;padding:1.2rem;margin-bottom:1rem;}
+.prog-item-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;}
+.prog-num{font-size:0.7rem;color:var(--gold);letter-spacing:1px;text-transform:uppercase;}
+.btn-rm{background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;transition:color 0.2s;padding:0;}
+.btn-rm:hover{color:var(--red);}
+
+.img-prev{width:100%;height:150px;border-radius:10px;border:2px dashed var(--border);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;cursor:pointer;transition:border-color 0.2s;margin-bottom:1rem;background-size:cover;background-position:center;position:relative;overflow:hidden;}
+.img-prev:hover{border-color:var(--gold);}
+.img-prev-ov{position:absolute;inset:0;background:rgba(13,17,23,0.6);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.2s;font-size:0.8rem;color:var(--gold-light);}
+.img-prev:hover .img-prev-ov{opacity:1;}
+
+.user-row{display:flex;align-items:center;justify-content:space-between;background:var(--deep3);border:1px solid var(--border);border-radius:10px;padding:0.85rem 1.1rem;margin-bottom:0.8rem;}
+.user-info{display:flex;align-items:center;gap:10px;}
+.user-av{width:34px;height:34px;border-radius:50%;background:var(--gold-dim);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:0.78rem;color:var(--gold-light);font-weight:500;}
+.user-nome{font-size:0.86rem;color:var(--text);}
+.user-login{font-size:0.7rem;color:var(--muted);}
+.role-badge{font-size:0.66rem;padding:0.18rem 0.55rem;border-radius:6px;margin-left:6px;}
+.role-badge.admin{background:var(--gold-dim);color:var(--gold-light);border:1px solid rgba(201,168,76,0.3);}
+.role-badge.pastor{background:rgba(52,152,219,0.15);color:#3498DB;border:1px solid rgba(52,152,219,0.3);}
+.role-badge.obreiro{background:rgba(39,174,96,0.12);color:var(--green);border:1px solid rgba(39,174,96,0.3);}
+
+/* ── ESCALAS ── */
+.escala-item{background:var(--deep3);border:1px solid var(--border);border-radius:10px;padding:1.2rem;margin-bottom:1rem;}
+.escala-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.8rem;}
+.escala-data{font-size:0.75rem;color:var(--gold);letter-spacing:1px;}
+.escala-titulo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--text);}
+.escala-local{font-size:0.78rem;color:var(--muted);}
+.escala-badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:0.8rem;}
+.ob-badge{font-size:0.72rem;padding:0.25rem 0.7rem;border-radius:8px;background:rgba(39,174,96,0.1);border:1px solid rgba(39,174,96,0.25);color:var(--green);}
+.ob-badge.confirmado{background:rgba(39,174,96,0.2);border-color:rgba(39,174,96,0.5);}
+.ob-badge.pendente{background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.25);color:var(--gold-light);}
+
+/* ── AVISOS ── */
+.aviso-item{background:var(--deep3);border-left:3px solid var(--gold);border-radius:0 10px 10px 0;padding:1rem 1.2rem;margin-bottom:1rem;}
+.aviso-titulo{font-size:0.9rem;font-weight:500;color:var(--text);margin-bottom:0.3rem;}
+.aviso-texto{font-size:0.82rem;color:var(--muted);line-height:1.6;}
+.aviso-data{font-size:0.7rem;color:var(--muted);margin-top:0.5rem;}
+
+/* ── PAINEL OBREIRO ── */
+#painel-obreiro{display:none;min-height:100vh;}
+.ob-nav{background:var(--deep2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;position:sticky;top:0;z-index:50;}
+.ob-nav-title{font-family:'Playfair Display',serif;font-size:0.9rem;font-weight:700;color:var(--green);}
+.ob-body{max-width:700px;margin:0 auto;padding:2rem;}
+.ob-section-title{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:var(--text);margin:2rem 0 1rem;}
+.ob-escala-card{background:var(--deep2);border:1px solid var(--border);border-radius:14px;padding:1.4rem;margin-bottom:1rem;}
+.ob-escala-data{font-size:0.72rem;color:var(--gold);letter-spacing:1px;margin-bottom:0.4rem;}
+.ob-escala-titulo{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:var(--text);margin-bottom:0.3rem;}
+.ob-escala-local{font-size:0.8rem;color:var(--muted);margin-bottom:0.8rem;}
+.ob-confirm-btn{background:var(--gold);color:var(--deep);border:none;border-radius:8px;padding:0.5rem 1.2rem;font-size:0.82rem;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.2s;}
+.ob-confirm-btn:hover{background:var(--gold-light);}
+.ob-confirm-btn.confirmado{background:rgba(39,174,96,0.2);color:var(--green);border:1px solid rgba(39,174,96,0.4);cursor:default;}
+.ob-aviso-card{background:var(--deep2);border-left:3px solid var(--gold);border-radius:0 14px 14px 0;padding:1.2rem;margin-bottom:1rem;}
+.ob-prog-card{background:var(--deep2);border:1px solid var(--border);border-radius:12px;padding:1.1rem;margin-bottom:0.8rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;}
+
+.toast{position:fixed;bottom:2rem;right:2rem;background:var(--deep3);border:1px solid rgba(39,174,96,0.4);color:var(--green);border-radius:10px;padding:0.75rem 1.2rem;font-size:0.85rem;display:none;z-index:999;}
+.senha-msg{margin-top:0.8rem;font-size:0.8rem;display:none;}
+
+@media(max-width:700px){
+  .about-inner{grid-template-columns:1fr;gap:2rem;}
+  nav ul{display:none;}
+  .sidebar{display:none;}
+  .fr,.fr.tres,.fr.quatro{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════
+     SITE PÚBLICO
+════════════════════════════════════════ -->
+<div id="site-publico">
+  <nav>
+    <div class="logo">
+      <div class="logo-icon">&#10011;</div>
+      <div>
+        <div class="logo-text">Casa de Oração do<br>Senhor Jesus Cristo</div>
+        <div class="logo-sub">Rádio Oficial</div>
+      </div>
+    </div>
+    <ul>
+      <li><a href="#">Início</a></li>
+      <li><a href="#ao-vivo">Ao Vivo</a></li>
+      <li><a href="#programacao">Programação</a></li>
+      <li><a href="#sobre">Sobre</a></li>
+      <li><a href="#ao-vivo" class="nav-btn">Ouvir ao vivo</a></li>
+    </ul>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div id="hero-bg-img"></div>
+    <div class="hero-lines"></div>
+    <div class="hero-content">
+      <div class="badge"><div class="live-dot"></div> No ar agora</div>
+      <div class="church-name-small" id="pub-nome-small">Casa de Oração do Senhor Jesus Cristo</div>
+      <h1><span class="linha1">A voz da fé,</span><span class="linha2">ao vivo</span><span class="linha3">para o seu coração</span></h1>
+      <div class="hero-subtitle" id="pub-versiculo">"A minha casa será chamada casa de oração"</div>
+      <div class="hero-verse" id="pub-ref">Mateus 21:13</div>
+      <p class="hero-desc" id="pub-desc">Programas de rádio com palavra, louvor e oração — transmitidos ao vivo diretamente da Casa de Oração do Senhor Jesus Cristo para onde você estiver.</p>
+      <div class="hero-btns">
+        <a href="#ao-vivo" class="btn-primary">&#9654;&nbsp; Ouvir agora</a>
+        <a href="#programacao" class="btn-secondary">Ver programação</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="admin-bar" id="barra-live">
+    <div class="admin-label">&#127897; Transmissão ao vivo:</div>
+    <div class="admin-input-wrap">
+      <input class="admin-input" id="url-input" type="text" placeholder="Cole aqui o link do YouTube ao vivo..." />
+      <button class="admin-go-btn" onclick="ativarTransmissao()">&#9654; Transmitir</button>
+      <button class="admin-stop-btn" id="stop-btn" onclick="encerrarTransmissao()">&#9632; Encerrar</button>
+    </div>
+    <span class="admin-feedback" id="live-feedback"></span>
+  </div>
+
+  <div class="player-section" id="ao-vivo">
+    <div class="player-wrapper">
+      <div class="player-header">
+        <div class="player-live-badge"><div class="live-dot"></div> Ao vivo</div>
+        <div class="player-program-name">Transmissão da Casa de Oração</div>
+      </div>
+      <div class="youtube-container" id="yt-container">
+        <div class="offline-screen" id="offline-screen">
+          <div class="offline-icon">&#128251;</div>
+          <div class="offline-title">Nenhuma transmissão no momento</div>
+          <div class="offline-sub">Confira nossa programação abaixo.</div>
+          <div class="offline-next">Próxima transmissão: Domingo às 10:00</div>
+        </div>
+      </div>
+      <div class="player-footer">
+        <span class="player-hint" id="player-hint">Acompanhe nossa programação abaixo</span>
+        <a href="#" class="youtube-link" id="yt-ext-link" style="display:none" target="_blank">&#9654; Abrir no YouTube</a>
+      </div>
+    </div>
+  </div>
+
+  <section class="section" id="programacao">
+    <div class="section-label">Na grade</div>
+    <div class="section-title">Programação da semana</div>
+    <div class="grid-3" id="pub-programacao"></div>
+  </section>
+
+  <div class="about-section" id="sobre">
+    <div class="about-inner">
+      <div>
+        <div class="section-label">Nossa missão</div>
+        <div class="section-title" style="margin-bottom:1rem;">Levando a Palavra além dos muros da Casa</div>
+        <p style="color:var(--muted);line-height:1.8;font-size:0.93rem;" id="pub-desc2">A Rádio da Casa de Oração do Senhor Jesus Cristo nasceu do desejo de alcançar cada lar com a mensagem do Evangelho.</p>
+        <div class="stats-grid">
+          <div class="stat-box"><div class="stat-num" id="pub-ouv">5k+</div><div class="stat-label">Ouvintes / mês</div></div>
+          <div class="stat-box"><div class="stat-num" id="pub-prog">12</div><div class="stat-label">Programas semanais</div></div>
+          <div class="stat-box"><div class="stat-num" id="pub-anos">3</div><div class="stat-label">Anos no ar</div></div>
+          <div class="stat-box"><div class="stat-num" id="pub-tx">24h</div><div class="stat-label">Transmissão contínua</div></div>
+        </div>
+      </div>
+      <div style="text-align:center;">
+        <div style="width:220px;height:220px;margin:0 auto;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,0.13) 0%,transparent 70%);display:flex;align-items:center;justify-content:center;border:1px solid rgba(201,168,76,0.22);">
+          <div style="font-size:4.5rem;opacity:0.65;">&#10011;</div>
+        </div>
+        <p style="color:var(--muted);font-size:0.9rem;margin-top:1.4rem;font-style:italic;font-family:'Playfair Display',serif;">"Porque a minha casa será chamada<br>casa de oração para todos os povos"</p>
+        <p style="color:var(--gold);font-size:0.72rem;letter-spacing:1.5px;margin-top:8px;">Isaías 56:7</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 <span id="pub-nome-footer">Casa de Oração do Senhor Jesus Cristo</span> — Todos os direitos reservados</p>
+    <p style="margin-top:5px;">Rádio Oficial da Casa</p>
+  </footer>
+</div>
+
+<!-- ════════════════════════════════════════
+     ÁREA ADMIN (login + painéis)
+════════════════════════════════════════ -->
+<div id="area-admin">
+
+  <!-- LOGIN ÚNICO -->
+  <div id="login-screen">
+    <div class="login-card">
+      <div class="login-icon">&#10011;</div>
+      <div class="login-title">Área Restrita</div>
+      <div class="login-sub">Casa de Oração do Senhor Jesus Cristo</div>
+      <div class="field"><label>Usuário</label><input type="text" id="l-user" placeholder="seu usuário" autocomplete="username"/></div>
+      <div class="field"><label>Senha</label><input type="password" id="l-pass" placeholder="••••••••" autocomplete="current-password"/></div>
+      <button class="login-btn" onclick="fazerLogin()">Entrar</button>
+      <div class="login-error" id="login-erro">Usuário ou senha incorretos.</div>
+      <div class="voltar-site" onclick="voltarSite()">&#8592; Voltar ao site</div>
+    </div>
+  </div>
+
+  <!-- PAINEL ADMIN / PASTOR -->
+  <div id="painel-screen">
+    <div class="adm-nav">
+      <div class="adm-nav-logo">
+        <div class="adm-nav-icon">&#10011;</div>
+        <div>
+          <div class="adm-nav-title" id="adm-nav-title">Painel Admin</div>
+          <div class="adm-nav-sub" id="adm-nav-sub">Casa de Oração</div>
+        </div>
+      </div>
+      <div class="adm-nav-btns">
+        <button class="btn-ghost" onclick="voltarSite()">&#128279; Ver site</button>
+        <button class="btn-danger" onclick="fazerLogout()">Sair</button>
+      </div>
+    </div>
+    <div class="adm-layout">
+      <div class="sidebar" id="sidebar-adm"></div>
+      <div class="adm-main" id="adm-main-content"></div>
+    </div>
+  </div>
+
+  <!-- PAINEL OBREIRO -->
+  <div id="painel-obreiro">
+    <div class="ob-nav">
+      <div class="adm-nav-logo">
+        <div class="adm-nav-icon" style="background:linear-gradient(135deg,#27AE60,#2ECC71);">&#9679;</div>
+        <div>
+          <div class="ob-nav-title">Portal do Obreiro</div>
+          <div class="adm-nav-sub">Casa de Oração do Senhor Jesus Cristo</div>
+        </div>
+      </div>
+      <button class="btn-danger" onclick="fazerLogout()">Sair</button>
+    </div>
+    <div class="ob-body" id="ob-body"></div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════
+// BANCO DE DADOS LOCAL
+// ══════════════════════════════════════
+var DB='casaoracao_v3';
+function db(){
+  var r=localStorage.getItem(DB);
+  if(r) return JSON.parse(r);
+  return {
+    usuarios:[
+      {nome:'Administrador',user:'admin',pass:'casa2025',role:'admin'},
+      {nome:'Pastor Responsável',user:'pastor',pass:'pastor2025',role:'pastor'},
+      {nome:'Obreiros',user:'obreiro',pass:'obreiro2025',role:'obreiro'}
+    ],
+    liveUrl:'',
+    programacao:[
+      {nome:'Palavra da Manhã',dias:'Seg – Sex',horario:'08:00',pastor:'Pastor responsável',tag:'Devocional'},
+      {nome:'Hora do Louvor',dias:'Ter – Qui',horario:'12:00',pastor:'Ministério de Música',tag:'Louvor'},
+      {nome:'Culto de Oração',dias:'Quarta',horario:'20:00',pastor:'Liderança da Casa',tag:'Oração'},
+      {nome:'Culto Ao Vivo',dias:'Domingo',horario:'10:00',pastor:'Toda a congregação',tag:'Transmissão especial'},
+      {nome:'Jovens em Oração',dias:'Sexta',horario:'21:00',pastor:'Dep. de Jovens',tag:'Jovens'}
+    ],
+    escalas:[
+      {id:1,titulo:'Culto Dominical',data:'22/06/2025',horario:'10:00',local:'Templo Principal',obreiros:['José Silva','Maria Souza','João Oliveira'],confirmados:[]},
+      {id:2,titulo:'Culto de Oração',data:'25/06/2025',horario:'20:00',local:'Sala de Oração',obreiros:['Ana Lima','Pedro Costa'],confirmados:[]}
+    ],
+    avisos:[
+      {id:1,titulo:'Reunião de liderança',texto:'Haverá reunião de liderança na sexta-feira às 19h na sala principal. Presença obrigatória para todos os obreiros.',data:'17/06/2025'},
+      {id:2,titulo:'Ensaio do louvor',texto:'O ensaio do ministério de louvor acontecerá sábado às 15h. Confirme sua presença com o líder.',data:'15/06/2025'}
+    ],
+    igreja:{nome:'Casa de Oração do Senhor Jesus Cristo',versiculo:'A minha casa será chamada casa de oração',ref:'Mateus 21:13',desc:'Programas de rádio com palavra, louvor e oração — transmitidos ao vivo diretamente da Casa de Oração do Senhor Jesus Cristo para onde você estiver.',stats:{ouv:'5k+',prog:'12',anos:'3',tx:'24h'}},
+    visual:{bgUrl:'',gold:'#C9A84C',goldLight:'#F0D080'}
+  };
+}
+function gravarDb(d){localStorage.setItem(DB,JSON.stringify(d));}
+
+var logado=null;
+
+// ══════════════════════════════════════
+// ROTEAMENTO
+// ══════════════════════════════════════
+function rotear(){
+  var h=window.location.hash;
+  if(h==='#admin'||h==='#pastor'||h==='#obreiro'){
+    document.getElementById('site-publico').style.display='none';
+    document.getElementById('area-admin').style.display='block';
+    if(logado){
+      abrirPainelCorreto();
+    } else {
+      document.getElementById('login-screen').style.display='flex';
+      document.getElementById('painel-screen').style.display='none';
+      document.getElementById('painel-obreiro').style.display='none';
+    }
+  } else {
+    document.getElementById('site-publico').style.display='block';
+    document.getElementById('area-admin').style.display='none';
+    carregarSitePublico();
+  }
+}
+window.addEventListener('hashchange',rotear);
+window.addEventListener('DOMContentLoaded',rotear);
+function voltarSite(){window.location.hash='';}
+
+// ══════════════════════════════════════
+// LOGIN
+// ══════════════════════════════════════
+function fazerLogin(){
+  var u=document.getElementById('l-user').value.trim();
+  var p=document.getElementById('l-pass').value;
+  var d=db();
+  var found=d.usuarios.find(function(x){return x.user===u&&x.pass===p;});
+  if(found){
+    logado=found;
+    document.getElementById('login-erro').style.display='none';
+    document.getElementById('login-screen').style.display='none';
+    abrirPainelCorreto();
+  } else {
+    document.getElementById('login-erro').style.display='block';
+  }
+}
+function fazerLogout(){
+  logado=null;
+  document.getElementById('barra-live').classList.remove('visivel');
+  voltarSite();
+}
+document.addEventListener('keydown',function(e){
+  if(e.key==='Enter'&&document.getElementById('area-admin').style.display!=='none') fazerLogin();
+});
+
+function abrirPainelCorreto(){
+  document.getElementById('login-screen').style.display='none';
+  if(logado.role==='obreiro'){
+    document.getElementById('painel-screen').style.display='none';
+    document.getElementById('painel-obreiro').style.display='block';
+    carregarPainelObreiro();
+  } else {
+    document.getElementById('painel-obreiro').style.display='none';
+    document.getElementById('painel-screen').style.display='block';
+    carregarPainelAdm();
+    if(logado.role==='admin'||logado.role==='pastor'){
+      document.getElementById('barra-live').classList.add('visivel');
+    }
+  }
+}
+
+// ══════════════════════════════════════
+// PAINEL ADMIN / PASTOR — montar sidebar
+// ══════════════════════════════════════
+function carregarPainelAdm(){
+  var isAdmin=logado.role==='admin';
+  var isPastor=logado.role==='pastor';
+
+  document.getElementById('adm-nav-title').textContent=isAdmin?'Painel Admin':'Painel Pastor';
+  document.getElementById('adm-nav-sub').textContent=logado.nome;
+
+  var sb=document.getElementById('sidebar-adm');
+  sb.innerHTML='';
+
+  var itens=[];
+  itens.push({sec:'Transmissão',items:[{id:'plive',icon:'&#127897;',label:'Ao Vivo'}]});
+
+  if(isAdmin||isPastor){
+    itens.push({sec:'Obreiros',items:[
+      {id:'pescalas',icon:'&#128197;',label:'Escalas'},
+      {id:'pavisos',icon:'&#128226;',label:'Avisos'},
+      {id:'pobreiros',icon:'&#128101;',label:'Obreiros'}
+    ]});
+  }
+
+  itens.push({sec:'Conteúdo',items:[
+    {id:'pprog',icon:'&#128203;',label:'Programação'},
+    {id:'pigreja',icon:'&#9962;',label:'Informações'},
+    {id:'pvisual',icon:'&#127912;',label:'Visual'}
+  ]});
+
+  if(isAdmin){
+    itens.push({sec:'Sistema',items:[
+      {id:'pusuarios',icon:'&#128101;',label:'Usuários'},
+      {id:'psenha',icon:'&#128274;',label:'Alterar Senha'}
+    ]});
+  } else {
+    itens.push({sec:'Conta',items:[
+      {id:'psenha',icon:'&#128274;',label:'Alterar Senha'}
+    ]});
+  }
+
+  itens.forEach(function(g){
+    var sl=document.createElement('div');sl.className='sb-section';sl.textContent=g.sec;sb.appendChild(sl);
+    g.items.forEach(function(item,i){
+      var d=document.createElement('div');
+      d.className='sb-item'+(i===0&&g===itens[0]?' ativo':'');
+      d.innerHTML='<span>'+item.icon+'</span> '+item.label;
+      d.onclick=(function(id,el){return function(){irPara(id,el);};})(item.id,d);
+      sb.appendChild(d);
+    });
+  });
+
+  // renderizar painéis
+  var mc=document.getElementById('adm-main-content');
+  mc.innerHTML='';
+  mc.appendChild(criarPainelLive());
+  if(isAdmin||isPastor){
+    mc.appendChild(criarPainelEscalas());
+    mc.appendChild(criarPainelAvisos());
+    mc.appendChild(criarPainelObreiros());
+  }
+  mc.appendChild(criarPainelProg());
+  mc.appendChild(criarPainelIgreja());
+  mc.appendChild(criarPainelVisual());
+  if(isAdmin) mc.appendChild(criarPainelUsuarios());
+  mc.appendChild(criarPainelSenha());
+
+  // ativar primeiro painel
+  var primeiro=mc.querySelector('.painel');
+  if(primeiro) primeiro.classList.add('ativo');
+
+  renderProgAdmin(db().programacao);
+  renderEscalas();
+  renderAvisos();
+  renderObreiros();
+  renderUsuarios();
+  carregarIgreja();
+  var d=db();
+  document.getElementById('adm-yt-url').value=d.liveUrl||'';
+  atualizarStatusAdmin(d.liveUrl);
+}
+
+function irPara(id,el){
+  document.querySelectorAll('.painel').forEach(function(p){p.classList.remove('ativo');});
+  document.querySelectorAll('.sb-item').forEach(function(s){s.classList.remove('ativo');});
+  var p=document.getElementById(id);if(p)p.classList.add('ativo');
+  el.classList.add('ativo');
+}
+
+// ══════════════════════════════════════
+// CRIAR PAINÉIS DINAMICAMENTE
+// ══════════════════════════════════════
+function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html)e.innerHTML=html;return e;}
+
+function criarPainelLive(){
+  var p=el('div','painel');p.id='plive';
+  p.innerHTML='<div class="ph"><div class="ph-titulo">Transmissão ao Vivo</div><div class="ph-desc">Cole o link do YouTube e ative para todos os visitantes.</div></div>'+
+  '<div class="card"><div class="card-titulo">Status atual</div>'+
+  '<div class="live-status"><div class="sdot" id="adm-sdot"></div><div id="adm-stxt"><strong>Offline</strong></div></div>'+
+  '<div class="fr um"><div class="fg"><label>Link do YouTube ao vivo</label><input type="text" id="adm-yt-url" placeholder="https://youtube.com/watch?v=..."/></div></div>'+
+  '<div style="display:flex;gap:0.8rem;flex-wrap:wrap;margin-top:0.5rem;">'+
+  '<button class="btn-salvar" onclick="adminAtivarLive()">&#9654; Ativar</button>'+
+  '<button class="btn-perigo" onclick="adminEncerrarLive()">&#9632; Encerrar</button></div></div>'+
+  '<div class="card"><div class="card-titulo">Como transmitir</div>'+
+  '<ol style="font-size:0.85rem;color:var(--muted);line-height:2.2;padding-left:1.2rem;">'+
+  '<li>YouTube → <strong style="color:var(--text)">Criar → Transmissão ao vivo</strong></li>'+
+  '<li>Configure e inicie a transmissão</li><li>Copie a URL e cole acima</li>'+
+  '<li>Clique em <strong style="color:var(--gold)">Ativar</strong></li></ol></div>';
+  return p;
+}
+
+function criarPainelEscalas(){
+  var p=el('div','painel');p.id='pescalas';
+  p.innerHTML='<div class="ph"><div class="ph-titulo">Escalas dos Obreiros</div><div class="ph-desc">Crie e gerencie as escalas de ministração.</div></div>'+
+  '<div class="card"><div class="card-titulo">Nova escala</div>'+
+  '<div class="fr tres">'+
+  '<div class="fg"><label>Título do culto</label><input type="text" id="esc-titulo" placeholder="Ex: Culto Dominical"/></div>'+
+  '<div class="fg"><label>Data</label><input type="text" id="esc-data" placeholder="DD/MM/AAAA"/></div>'+
+  '<div class="fg"><label>Horário</label><input type="text" id="esc-hora" placeholder="00:00"/></div></div>'+
+  '<div class="fr um"><div class="fg"><label>Local</label><input type="text" id="esc-local" placeholder="Ex: Templo Principal"/></div></div>'+
+  '<div class="fr um"><div class="fg"><label>Obreiros escalados (um por linha)</label>'+
+  '<textarea id="esc-obreiros" placeholder="José Silva&#10;Maria Souza&#10;João Oliveira"></textarea></div></div>'+
+  '<button class="btn-salvar" onclick="addEscala()" style="margin-top:0.5rem;">&#10133; Adicionar escala</button></div>'+
+  '<div class="card"><div class="card-titulo">Escalas cadastradas</div><div id="adm-escalas-lista"></div></div>';
+  return p;
+}
+
+function criarPainelAvisos(){
+  var p=el('div','painel');p.id='pavisos';
+  p.innerHTML='<div class="ph"><div class="ph-titulo">Avisos para Obreiros</div><div class="ph-desc">Envie comunicados para todos os obreiros.</div></div>'+
+  '<div class="card"><div class="card-titulo">Novo aviso</div>'+
+  '<div class="fr um"><div class="fg"><label>Título</label><input type="text" id="av-titulo" placeholder="Título do aviso"/></div></div>'+
+  '<div class="fr um"><div class="fg"><label>Mensagem</label><textarea id="av-texto" placeholder="Escreva o aviso aqui..."></textarea></div></div>'+
+  '<button class="btn-salvar" onclick="addAviso()">&#128226; Publicar aviso</button></div>'+
+  '<div class="card"><div class="card-titulo">Avisos publicados</div><div id="adm-avisos-lista"></div></div>';
+  return p;
+}
+
+function criarPainelObreiros(){
+  var p=el('div','painel');p.id='pobreiros';
+  p.innerHTML='<div class="ph"><div class="ph-titulo">Obreiros</div><div class="ph-desc">Gerencie o acesso dos obreiros ao portal.</div></div>'+
+  '<div class="card"><div class="card-titulo">Credenciais dos obreiros</div>'+
+  '<div style="background:var(--deep3);border-radius:10px;padding:1rem 1.2rem;margin-bottom:1.2rem;font-size:0.85rem;">'+
+  '<strong style="color:var(--gold)">Acesso único para todos os obreiros:</strong><br>'+
+  '<span style="color:var(--muted)">Usuário:</span> <code style="background:var(--deep2);padding:2px 6px;border-radius:4px;font-size:0.82rem;" id="ob-user-show">obreiro</code>&nbsp;&nbsp;'+
+  '<span style="color:var(--muted)">Senha:</span> <code style="background:var(--deep2);padding:2px 6px;border-radius:4px;font-size:0.82rem;" id="ob-pass-show">obreiro2025</code>'+
+  '</div>'+
+  '<div class="fr"><div class="fg"><label>Nova senha dos obreiros</label><input type="text" id="ob-nova-pass" placeholder="Nova senha"/></div>'+
+  '<div class="fg"><label>&nbsp;</label><button class="btn-salvar" onclick="trocarSenhaObreiro()" style="margin-top:0.35rem;">Salvar nova senha</button></div></div></div>';
+  return p;
+}
+
+function criarPainelProg(){
+  var p=el('div','painel');p.id='pprog';
+  p.innerHTML='<div class="ph"><div class="ph-titulo">Programação da Semana</div><div class="ph-desc">Edite os programas exibidos no site.</div></div>'+
+  '<div class="card"><div class="card-titulo">Programas</div>'+
+  '<div id="adm-prog-lista"></div>'+
+  '<button class="btn-outline" onclick="adicionarProg()">+ Adicionar programa</button>'+
+  '<div style="margin-top:1.2rem;"><button class="btn-salvar" onclick="salvarProg()">&#10003; Salvar e publicar</button></div></div>';
+  return p;
+}
+
+function criarPainelIgreja(){
+  var p=el('div','painel');p.id='pigreja';
+  p.innerHTML='<div class="ph"><div class="ph-titulo">Informações da Igreja</div></div>'+
+  '<div class="card"><div class="card-titulo">Nome e textos</div>'+
+  '<div class="fr um"><div class="fg"><label>Nome da igreja</label><input type="text" id="ig-nome"/></div></div>'+
+  '<div class="fr"><div class="fg"><label>Versículo</label><input type="text" id="ig-vers"/></div><div class="fg"><label>Referência</label><input type="text" id="ig-ref"/></div></div>'+
+  '<div class="fr um"><div class="fg"><label>Descrição</label><textarea id="ig-desc"></textarea></div></div></div>'+
+  '<div class="card"><div class="card-titulo">Estatísticas</div>'+
+  '<div class="fr quatro">'+
+  '<div class="fg"><label>Ouvintes/mês</label><input type="text" id="st-ouv"/></div>'+
+  '<div class="fg"><label>Programas</label><input type="text" id="st-prog"/></div>'+
+  '<div class="fg"><label>Anos no ar</label><input type="text" id="st-anos"/></div>'+
+  '<div class="fg"><label>Transmissão</label><input type="text" id="st-tx"/></div></div>'+
+  '<button class="btn-salvar" style="margin-top:0.5rem;" onclick="salvarIgreja()">&#10003; Salvar</button></div>';
+  return p;
+}
+
+function criarPainelVisual(){
+  var p=el('div','painel');p.id='pvisual';
+  p.innerHTML='<div class="ph"><div class="ph-titulo">Visual / Imagem de Fundo</div></div>'+
+  '<div class="card"><div class="card-titulo">Imagem de fundo</div>'+
+  '<div class="img-prev" id="bg-prev" onclick="document.getElementById(\'bg-file\').click()">'+
+  '<div style="font-size:2rem;opacity:0.4;" id="bg-prev-icon">&#128247;</div>'+
+  '<div style="font-size:0.78rem;color:var(--muted);" id="bg-prev-label">Clique para escolher</div>'+
+  '<div class="img-prev-ov">Trocar imagem</div></div>'+
+  '<input type="file" id="bg-file" accept="image/*" style="display:none" onchange="prevImagem(this)"/>'+
+  '<div class="fr um" style="margin-top:0.8rem;"><div class="fg"><label>Ou cole o link de uma imagem</label>'+
+  '<input type="text" id="bg-url" placeholder="https://..." oninput="prevUrl()"/></div></div>'+
+  '<button class="btn-salvar" style="margin-top:0.5rem;" onclick="salvarVisual()">&#10003; Aplicar</button></div>'+
+  '<div class="card"><div class="card-titulo">Cores do site</div>'+
+  '<div class="fr"><div class="fg"><label>Cor principal</label><input type="color" id="cor-gold" value="#C9A84C" style="height:42px;padding:4px;"/></div>'+
+  '<div class="fg"><label>Cor clara</label><input type="color" id="cor-light" value="#F0D080" style="height:42px;padding:4px;"/></div></div>'+
+  '<button class="btn-salvar" onclick="salvarCores()">&#10003; Salvar cores</button></div>';
+  return p;
+}
+
+function criarPainelUsuarios(){
+  var p=el('div','painel');p.id='pusuarios';
+  p.innerHTML='<div class="ph"><div class="ph-titulo">Usuários do Sistema</div></div>'+
+  '<div class="card"><div class="card-titulo">Usuários ativos</div><div id="adm-user-lista"></div></div>'+
+  '<div class="card"><div class="card-titulo">Adicionar usuário</div>'+
+  '<div class="fr"><div class="fg"><label>Nome</label><input type="text" id="nu-nome" placeholder="Nome"/></div>'+
+  '<div class="fg"><label>Login</label><input type="text" id="nu-user" placeholder="usuário"/></div></div>'+
+  '<div class="fr"><div class="fg"><label>Senha</label><input type="password" id="nu-pass" placeholder="••••••••"/></div>'+
+  '<div class="fg"><label>Perfil</label><select id="nu-role"><option value="admin">Administrador</option><option value="pastor">Pastor</option></select></div></div>'+
+  '<button class="btn-salvar" onclick="addUsuario()">&#10133; Adicionar</button></div>';
+  return p;
+}
+
+function criarPainelSenha(){
+  var p=el('div','painel');p.id='psenha';
+  p.innerHTML='<div class="ph"><div class="ph-titulo">Alterar Minha Senha</div></div>'+
+  '<div class="card" style="max-width:400px;"><div class="card-titulo">Nova senha</div>'+
+  '<div class="fg" style="margin-bottom:1rem;"><label>Senha atual</label><input type="password" id="sa-atual" placeholder="••••••••"/></div>'+
+  '<div class="fg" style="margin-bottom:1rem;"><label>Nova senha</label><input type="password" id="sa-nova" placeholder="••••••••"/></div>'+
+  '<div class="fg" style="margin-bottom:1.2rem;"><label>Confirmar</label><input type="password" id="sa-conf" placeholder="••••••••"/></div>'+
+  '<button class="btn-salvar" onclick="alterarSenha()">&#10003; Salvar</button>'+
+  '<div class="senha-msg" id="senha-msg"></div></div>';
+  return p;
+}
+
+// ══════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════
+function toast(msg){var t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(function(){t.style.display='none';},3000);}
+
+// ══════════════════════════════════════
+// SITE PÚBLICO
+// ══════════════════════════════════════
+function carregarSitePublico(){
+  var d=db();
+  document.getElementById('pub-nome-small').textContent=d.igreja.nome;
+  document.getElementById('pub-versiculo').textContent='"'+d.igreja.versiculo+'"';
+  document.getElementById('pub-ref').textContent=d.igreja.ref;
+  document.getElementById('pub-desc').textContent=d.igreja.desc;
+  document.getElementById('pub-desc2').textContent=d.igreja.desc;
+  document.getElementById('pub-ouv').textContent=d.igreja.stats.ouv;
+  document.getElementById('pub-prog').textContent=d.igreja.stats.prog;
+  document.getElementById('pub-anos').textContent=d.igreja.stats.anos;
+  document.getElementById('pub-tx').textContent=d.igreja.stats.tx;
+  document.getElementById('pub-nome-footer').textContent=d.igreja.nome;
+  if(d.visual.bgUrl){var bg=document.getElementById('hero-bg-img');bg.style.backgroundImage='url('+d.visual.bgUrl+')';bg.style.display='block';}
+  document.documentElement.style.setProperty('--gold',d.visual.gold||'#C9A84C');
+  document.documentElement.style.setProperty('--gold-light',d.visual.goldLight||'#F0D080');
+  renderProgPublico(d.programacao);
+  if(d.liveUrl) ativarPlayerPublico(d.liveUrl);
+  if(logado&&logado.role!=='obreiro') document.getElementById('barra-live').classList.add('visivel');
+}
+
+function renderProgPublico(lista){
+  var el=document.getElementById('pub-programacao');if(!el)return;el.innerHTML='';
+  lista.forEach(function(p){
+    var div=document.createElement('div');div.className='program-card';
+    div.innerHTML='<div class="program-time">'+p.dias+' &nbsp;|&nbsp; '+p.horario+'</div><div class="program-name">'+p.nome+'</div><div class="program-host">'+p.pastor+'</div><span class="program-tag">'+p.tag+'</span>';
+    el.appendChild(div);
+  });
+}
+
+// ══════════════════════════════════════
+// PLAYER PÚBLICO
+// ══════════════════════════════════════
+function extrairId(url){
+  var m=url.match(/[?&]v=([a-zA-Z0-9_-]{11})/)||url.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/)||url.match(/youtube\.com\/live\/([a-zA-Z0-9_-]{11})/);
+  return m?m[1]:null;
+}
+function ativarPlayerPublico(url){
+  var id=extrairId(url);if(!id)return;
+  var cont=document.getElementById('yt-container');
+  var old=cont.querySelector('iframe');if(old)cont.removeChild(old);
+  document.getElementById('offline-screen').style.display='none';
+  var f=document.createElement('iframe');
+  f.src='https://www.youtube.com/embed/'+id+'?autoplay=1&rel=0';
+  f.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+  f.allowFullscreen=true;
+  cont.appendChild(f);
+  var ext=document.getElementById('yt-ext-link');
+  ext.href='https://www.youtube.com/watch?v='+id;
+  ext.style.display='inline-flex';
+  document.getElementById('player-hint').textContent='Transmissão ativa ao vivo';
+  document.getElementById('stop-btn').style.display='inline-block';
+  document.getElementById('url-input').value=url;
+}
+function desativarPlayerPublico(){
+  var cont=document.getElementById('yt-container');
+  var f=cont.querySelector('iframe');if(f)cont.removeChild(f);
+  document.getElementById('offline-screen').style.display='flex';
+  document.getElementById('yt-ext-link').style.display='none';
+  document.getElementById('stop-btn').style.display='none';
+  document.getElementById('player-hint').textContent='Acompanhe nossa programação abaixo';
+  document.getElementById('url-input').value='';
+}
+function ativarTransmissao(){
+  var url=document.getElementById('url-input').value.trim();
+  if(!url){mostrarFeedback('Cole o link do YouTube.','erro');return;}
+  var d=db();d.liveUrl=url;gravarDb(d);
+  ativarPlayerPublico(url);
+  mostrarFeedback('Transmissão ativa!','ok');
+  var i=document.getElementById('adm-yt-url');if(i)i.value=url;
+  atualizarStatusAdmin(url);
+}
+function encerrarTransmissao(){
+  var d=db();d.liveUrl='';gravarDb(d);
+  desativarPlayerPublico();
+  mostrarFeedback('Encerrada.','ok');
+  var i=document.getElementById('adm-yt-url');if(i)i.value='';
+  atualizarStatusAdmin('');
+}
+function mostrarFeedback(msg,tipo){
+  var e=document.getElementById('live-feedback');
+  e.textContent=msg;e.className='admin-feedback '+tipo;
+  if(tipo==='ok')setTimeout(function(){e.className='admin-feedback';},4000);
+}
+document.getElementById('url-input').addEventListener('keydown',function(e){if(e.key==='Enter')ativarTransmissao();});
+
+// ══════════════════════════════════════
+// LIVE — PAINEL
+// ══════════════════════════════════════
+function atualizarStatusAdmin(url){
+  var dot=document.getElementById('adm-sdot'),txt=document.getElementById('adm-stxt');
+  if(!dot)return;
+  if(url){dot.className='sdot on';txt.innerHTML='<strong style="color:var(--green)">Ao vivo</strong> — transmissão ativa';}
+  else{dot.className='sdot';txt.innerHTML='<strong>Offline</strong> — sem transmissão';}
+}
+function adminAtivarLive(){
+  var url=document.getElementById('adm-yt-url').value.trim();
+  if(!url||!extrairId(url)){alert('Cole um link válido do YouTube.');return;}
+  var d=db();d.liveUrl=url;gravarDb(d);
+  atualizarStatusAdmin(url);
+  ativarPlayerPublico(url);
+  document.getElementById('url-input').value=url;
+  toast('Transmissão ativada!');
+}
+function adminEncerrarLive(){
+  var d=db();d.liveUrl='';gravarDb(d);
+  atualizarStatusAdmin('');
+  desativarPlayerPublico();
+  document.getElementById('adm-yt-url').value='';
+  toast('Transmissão encerrada.');
+}
+
+// ══════════════════════════════════════
+// ESCALAS
+// ══════════════════════════════════════
+function renderEscalas(){
+  var el=document.getElementById('adm-escalas-lista');if(!el)return;
+  var d=db();el.innerHTML='';
+  if(d.escalas.length===0){el.innerHTML='<p style="color:var(--muted);font-size:0.85rem;">Nenhuma escala cadastrada ainda.</p>';return;}
+  d.escalas.forEach(function(e){
+    var div=document.createElement('div');div.className='escala-item';
+    var obs=e.obreiros.map(function(o){
+      var conf=e.confirmados&&e.confirmados.includes(o);
+      return '<span class="ob-badge '+(conf?'confirmado':'pendente')+'">'+o+(conf?' ✓':'')+' </span>';
+    }).join('');
+    div.innerHTML='<div class="escala-header"><div>'+
+      '<div class="escala-data">'+e.data+' às '+e.horario+'</div>'+
+      '<div class="escala-titulo">'+e.titulo+'</div>'+
+      '<div class="escala-local">'+e.local+'</div></div>'+
+      '<button class="btn-rm" onclick="removerEscala('+e.id+')">&#10005;</button></div>'+
+      '<div class="escala-badges">'+obs+'</div>';
+    el.appendChild(div);
+  });
+}
+function addEscala(){
+  var t=document.getElementById('esc-titulo').value.trim();
+  var dt=document.getElementById('esc-data').value.trim();
+  var h=document.getElementById('esc-hora').value.trim();
+  var l=document.getElementById('esc-local').value.trim();
+  var obs=document.getElementById('esc-obreiros').value.trim().split('\n').map(function(s){return s.trim();}).filter(Boolean);
+  if(!t||!dt||!h||!l){alert('Preencha todos os campos.');return;}
+  var d=db();
+  var novoId=Date.now();
+  d.escalas.push({id:novoId,titulo:t,data:dt,horario:h,local:l,obreiros:obs,confirmados:[]});
+  gravarDb(d);renderEscalas();
+  document.getElementById('esc-titulo').value='';document.getElementById('esc-data').value='';
+  document.getElementById('esc-hora').value='';document.getElementById('esc-local').value='';
+  document.getElementById('esc-obreiros').value='';
+  toast('Escala adicionada!');
+}
+function removerEscala(id){
+  if(!confirm('Remover esta escala?'))return;
+  var d=db();d.escalas=d.escalas.filter(function(e){return e.id!==id;});gravarDb(d);renderEscalas();toast('Escala removida.');
+}
+
+// ══════════════════════════════════════
+// AVISOS
+// ══════════════════════════════════════
+function renderAvisos(){
+  var el=document.getElementById('adm-avisos-lista');if(!el)return;
+  var d=db();el.innerHTML='';
+  if(d.avisos.length===0){el.innerHTML='<p style="color:var(--muted);font-size:0.85rem;">Nenhum aviso publicado.</p>';return;}
+  d.avisos.forEach(function(a){
+    var div=document.createElement('div');div.className='aviso-item';
+    div.innerHTML='<div style="display:flex;justify-content:space-between;align-items:flex-start;">'+
+      '<div class="aviso-titulo">'+a.titulo+'</div>'+
+      '<button class="btn-rm" onclick="removerAviso('+a.id+')">&#10005;</button></div>'+
+      '<div class="aviso-texto">'+a.texto+'</div>'+
+      '<div class="aviso-data">'+a.data+'</div>';
+    el.appendChild(div);
+  });
+}
+function addAviso(){
+  var t=document.getElementById('av-titulo').value.trim();
+  var tx=document.getElementById('av-texto').value.trim();
+  if(!t||!tx){alert('Preencha título e mensagem.');return;}
+  var d=db();
+  var hoje=new Date();var data=hoje.getDate()+'/'+(hoje.getMonth()+1)+'/'+hoje.getFullYear();
+  d.avisos.unshift({id:Date.now(),titulo:t,texto:tx,data:data});
+  gravarDb(d);renderAvisos();
+  document.getElementById('av-titulo').value='';document.getElementById('av-texto').value='';
+  toast('Aviso publicado!');
+}
+function removerAviso(id){
+  if(!confirm('Remover este aviso?'))return;
+  var d=db();d.avisos=d.avisos.filter(function(a){return a.id!==id;});gravarDb(d);renderAvisos();toast('Aviso removido.');
+}
+
+// ══════════════════════════════════════
+// OBREIROS — TROCAR SENHA
+// ══════════════════════════════════════
+function renderObreiros(){
+  var el1=document.getElementById('ob-user-show'),el2=document.getElementById('ob-pass-show');if(!el1)return;
+  var d=db();var ob=d.usuarios.find(function(u){return u.role==='obreiro';});
+  if(ob){el1.textContent=ob.user;el2.textContent=ob.pass;}
+}
+function trocarSenhaObreiro(){
+  var nova=document.getElementById('ob-nova-pass').value.trim();
+  if(!nova||nova.length<4){alert('Digite uma senha com pelo menos 4 caracteres.');return;}
+  var d=db();var idx=d.usuarios.findIndex(function(u){return u.role==='obreiro';});
+  if(idx>-1){d.usuarios[idx].pass=nova;gravarDb(d);renderObreiros();toast('Senha dos obreiros atualizada!');}
+}
+
+// ══════════════════════════════════════
+// PROGRAMAÇÃO
+// ══════════════════════════════════════
+function renderProgAdmin(lista){
+  var el=document.getElementById('adm-prog-lista');if(!el)return;el.innerHTML='';
+  lista.forEach(function(p,i){
+    var div=document.createElement('div');div.className='prog-item';
+    div.innerHTML='<div class="prog-item-top"><span class="prog-num">Programa '+(i+1)+'</span><button class="btn-rm" onclick="removerProg('+i+')">&#10005;</button></div>'+
+      '<div class="fr tres"><div class="fg"><label>Nome</label><input type="text" value="'+p.nome+'" onchange="editProg('+i+',\'nome\',this.value)"/></div>'+
+      '<div class="fg"><label>Dias</label><input type="text" value="'+p.dias+'" onchange="editProg('+i+',\'dias\',this.value)"/></div>'+
+      '<div class="fg"><label>Horário</label><input type="text" value="'+p.horario+'" onchange="editProg('+i+',\'horario\',this.value)"/></div></div>'+
+      '<div class="fr"><div class="fg"><label>Pastor / Responsável</label><input type="text" value="'+p.pastor+'" onchange="editProg('+i+',\'pastor\',this.value)"/></div>'+
+      '<div class="fg"><label>Categoria</label><input type="text" value="'+p.tag+'" onchange="editProg('+i+',\'tag\',this.value)"/></div></div>';
+    el.appendChild(div);
+  });
+}
+function editProg(i,c,v){var d=db();d.programacao[i][c]=v;gravarDb(d);}
+function removerProg(i){var d=db();d.programacao.splice(i,1);gravarDb(d);renderProgAdmin(d.programacao);}
+function adicionarProg(){var d=db();d.programacao.push({nome:'Novo Programa',dias:'Seg',horario:'00:00',pastor:'Pastor',tag:'Devocional'});gravarDb(d);renderProgAdmin(d.programacao);}
+function salvarProg(){renderProgPublico(db().programacao);toast('Programação salva e publicada!');}
+
+// ══════════════════════════════════════
+// INFORMAÇÕES DA IGREJA
+// ══════════════════════════════════════
+function carregarIgreja(){
+  var d=db();var ig=d.igreja;
+  var f=function(id,v){var e=document.getElementById(id);if(e)e.value=v;};
+  f('ig-nome',ig.nome);f('ig-vers',ig.versiculo);f('ig-ref',ig.ref);f('ig-desc',ig.desc);
+  f('st-ouv',ig.stats.ouv);f('st-prog',ig.stats.prog);f('st-anos',ig.stats.anos);f('st-tx',ig.stats.tx);
+}
+function salvarIgreja(){
+  var g=function(id){var e=document.getElementById(id);return e?e.value:'';};
+  var d=db();
+  d.igreja={nome:g('ig-nome'),versiculo:g('ig-vers'),ref:g('ig-ref'),desc:g('ig-desc'),
+    stats:{ouv:g('st-ouv'),prog:g('st-prog'),anos:g('st-anos'),tx:g('st-tx')}};
+  gravarDb(d);toast('Informações salvas!');
+}
+
+// ══════════════════════════════════════
+// VISUAL
+// ══════════════════════════════════════
+function prevImagem(input){
+  var f=input.files[0];if(!f)return;
+  var r=new FileReader();
+  r.onload=function(e){
+    var p=document.getElementById('bg-prev');
+    p.style.backgroundImage='url('+e.target.result+')';
+    document.getElementById('bg-prev-icon').style.display='none';
+    document.getElementById('bg-prev-label').style.display='none';
+    document.getElementById('bg-url').value=e.target.result;
+  };r.readAsDataURL(f);
+}
+function prevUrl(){
+  var url=document.getElementById('bg-url').value;if(!url)return;
+  var p=document.getElementById('bg-prev');
+  p.style.backgroundImage='url('+url+')';
+  document.getElementById('bg-prev-icon').style.display='none';
+  document.getElementById('bg-prev-label').style.display='none';
+}
+function salvarVisual(){
+  var d=db();d.visual.bgUrl=document.getElementById('bg-url').value;gravarDb(d);
+  var bg=document.getElementById('hero-bg-img');
+  if(d.visual.bgUrl){bg.style.backgroundImage='url('+d.visual.bgUrl+')';bg.style.display='block';}
+  toast('Imagem aplicada!');
+}
+function salvarCores(){
+  var d=db();
+  d.visual.gold=document.getElementById('cor-gold').value;
+  d.visual.goldLight=document.getElementById('cor-light').value;
+  gravarDb(d);
+  document.documentElement.style.setProperty('--gold',d.visual.gold);
+  document.documentElement.style.setProperty('--gold-light',d.visual.goldLight);
+  toast('Cores aplicadas!');
+}
+
+// ══════════════════════════════════════
+// USUÁRIOS (só admin)
+// ══════════════════════════════════════
+function renderUsuarios(){
+  var el=document.getElementById('adm-user-lista');if(!el)return;
+  var d=db();el.innerHTML='';
+  d.usuarios.forEach(function(u,i){
+    var ini=u.nome.split(' ').map(function(w){return w[0];}).join('').substring(0,2).toUpperCase();
+    var div=document.createElement('div');div.className='user-row';
+    var roleLabel={admin:'Admin',pastor:'Pastor',obreiro:'Obreiro'}[u.role]||u.role;
+    div.innerHTML='<div class="user-info"><div class="user-av">'+ini+'</div>'+
+      '<div><div class="user-nome">'+u.nome+'<span class="role-badge '+u.role+'">'+roleLabel+'</span></div>'+
+      '<div class="user-login">@'+u.user+'</div></div></div>'+
+      (i>2?'<button class="btn-perigo" onclick="removerUser('+i+')">Remover</button>':'<span style="font-size:0.7rem;color:var(--muted)">conta fixa</span>');
+    el.appendChild(div);
+  });
+}
+function addUsuario(){
+  var nome=document.getElementById('nu-nome').value.trim(),user=document.getElementById('nu-user').value.trim();
+  var pass=document.getElementById('nu-pass').value,role=document.getElementById('nu-role').value;
+  if(!nome||!user||!pass){alert('Preencha todos os campos.');return;}
+  var d=db();if(d.usuarios.find(function(u){return u.user===user;})){alert('Usuário já existe.');return;}
+  d.usuarios.push({nome,user,pass,role});gravarDb(d);renderUsuarios();
+  document.getElementById('nu-nome').value='';document.getElementById('nu-user').value='';document.getElementById('nu-pass').value='';
+  toast('Usuário adicionado!');
+}
+function removerUser(i){
+  if(!confirm('Remover?'))return;
+  var d=db();d.usuarios.splice(i,1);gravarDb(d);renderUsuarios();toast('Removido.');
+}
+
+// ══════════════════════════════════════
+// ALTERAR SENHA
+// ══════════════════════════════════════
+function alterarSenha(){
+  var atual=document.getElementById('sa-atual').value,nova=document.getElementById('sa-nova').value,conf=document.getElementById('sa-conf').value;
+  var msg=document.getElementById('senha-msg');
+  if(atual!==logado.pass){msg.style.display='block';msg.style.color='var(--red)';msg.textContent='Senha atual incorreta.';return;}
+  if(nova.length<6){msg.style.display='block';msg.style.color='var(--red)';msg.textContent='Mínimo 6 caracteres.';return;}
+  if(nova!==conf){msg.style.display='block';msg.style.color='var(--red)';msg.textContent='Senhas não coincidem.';return;}
+  var d=db();var idx=d.usuarios.findIndex(function(u){return u.user===logado.user;});
+  d.usuarios[idx].pass=nova;gravarDb(d);logado.pass=nova;
+  msg.style.display='block';msg.style.color='var(--green)';msg.textContent='Senha alterada!';
+  document.getElementById('sa-atual').value='';document.getElementById('sa-nova').value='';document.getElementById('sa-conf').value='';
+  setTimeout(function(){msg.style.display='none';},4000);
+}
+
+// ══════════════════════════════════════
+// PAINEL OBREIRO
+// ══════════════════════════════════════
+function carregarPainelObreiro(){
+  var d=db();
+  var body=document.getElementById('ob-body');
+  body.innerHTML='';
+
+  // Escalas do obreiro
+  var t1=document.createElement('div');t1.className='ob-section-title';t1.textContent='Minhas Escalas';body.appendChild(t1);
+  if(d.escalas.length===0){
+    var vazio=document.createElement('p');vazio.style.color='var(--muted)';vazio.style.fontSize='0.85rem';vazio.textContent='Nenhuma escala cadastrada ainda.';body.appendChild(vazio);
+  } else {
+    d.escalas.forEach(function(e){
+      var card=document.createElement('div');card.className='ob-escala-card';
+      var confirmado=e.confirmados&&e.confirmados.includes('obreiro');
+      card.innerHTML='<div class="ob-escala-data">'+e.data+' às '+e.horario+'</div>'+
+        '<div class="ob-escala-titulo">'+e.titulo+'</div>'+
+        '<div class="ob-escala-local">'+e.local+'</div>'+
+        '<div style="display:flex;align-items:center;justify-content:space-between;margin-top:0.8rem;">'+
+        '<span style="font-size:0.78rem;color:var(--muted);">Obreiros: '+e.obreiros.join(', ')+'</span>'+
+        '<button class="ob-confirm-btn '+(confirmado?'confirmado':'')+'" '+(confirmado?'disabled':'')+
+        ' onclick="confirmarPresenca('+e.id+', this)">'+(confirmado?'Presença confirmada':'Confirmar presença')+'</button></div>';
+      body.appendChild(card);
+    });
+  }
+
+  // Avisos
+  var t2=document.createElement('div');t2.className='ob-section-title';t2.textContent='Avisos da Liderança';body.appendChild(t2);
+  if(d.avisos.length===0){
+    var v2=document.createElement('p');v2.style.color='var(--muted)';v2.style.fontSize='0.85rem';v2.textContent='Nenhum aviso no momento.';body.appendChild(v2);
+  } else {
+    d.avisos.forEach(function(a){
+      var card=document.createElement('div');card.className='ob-aviso-card';
+      card.innerHTML='<div class="aviso-titulo">'+a.titulo+'</div>'+
+        '<div class="aviso-texto">'+a.texto+'</div>'+
+        '<div class="aviso-data">'+a.data+'</div>';
+      body.appendChild(card);
+    });
+  }
+
+  // Programação
+  var t3=document.createElement('div');t3.className='ob-section-title';t3.textContent='Programação da Semana';body.appendChild(t3);
+  d.programacao.forEach(function(p){
+    var card=document.createElement('div');card.className='ob-prog-card';
+    card.innerHTML='<div>'+
+      '<div style="font-family:\'Playfair Display\',serif;font-size:0.95rem;font-weight:700;color:var(--text);">'+p.nome+'</div>'+
+      '<div style="font-size:0.78rem;color:var(--muted);">'+p.pastor+'</div></div>'+
+      '<div style="text-align:right;">'+
+      '<div style="font-size:0.78rem;color:var(--gold);">'+p.dias+'</div>'+
+      '<div style="font-size:0.85rem;font-weight:500;color:var(--text);">'+p.horario+'</div></div>';
+    body.appendChild(card);
+  });
+}
+
+function confirmarPresenca(id, btn){
+  var d=db();
+  var esc=d.escalas.find(function(e){return e.id===id;});
+  if(esc){
+    if(!esc.confirmados)esc.confirmados=[];
+    if(!esc.confirmados.includes('obreiro')){
+      esc.confirmados.push('obreiro');
+      gravarDb(d);
+      btn.textContent='Presença confirmada';
+      btn.className='ob-confirm-btn confirmado';
+      btn.disabled=true;
+      toast('Presença confirmada!');
+      renderEscalas();
+    }
+  }
+}
+</script>
+</body>
+</html>
+<!-- MÓDULO FINANCEIRO — injetado via script -->
+<script>
+// ══════════════════════════════════════
+// MÓDULO FINANCEIRO
+// ══════════════════════════════════════
+
+// Inicializa dados financeiros no banco se não existir
+function initFinanceiro(){
+  var d=db();
+  if(!d.filiais){
+    d.filiais=[
+      {id:1,nome:'Filial Central',pastor:'Pastor João',user:'pastor'},
+      {id:2,nome:'Filial Norte',pastor:'Pastor Pedro',user:'pastor2'},
+      {id:3,nome:'Filial Sul',pastor:'Pastor Lucas',user:'pastor3'}
+    ];
+  }
+  if(!d.financeiro) d.financeiro={};
+  gravarDb(d);
+}
+
+var MESES=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+
+function chaveFinanceiro(filialId,ano,mes){return filialId+'_'+ano+'_'+mes;}
+
+function getLancamento(filialId,ano,mes){
+  var d=db();
+  var chave=chaveFinanceiro(filialId,ano,mes);
+  return d.financeiro[chave]||{dizimos:0,ofertas:0,despesas:0,repasse:0,obs:''};
+}
+
+function salvarLancamento(filialId,ano,mes,dados){
+  var d=db();
+  if(!d.financeiro) d.financeiro={};
+  d.financeiro[chaveFinanceiro(filialId,ano,mes)]=dados;
+  gravarDb(d);
+}
+
+function getFilialByUser(user){
+  var d=db();
+  if(!d.filiais) return null;
+  return d.filiais.find(function(f){return f.user===user;})||null;
+}
+
+// ── PAINEL FINANCEIRO PASTOR ──
+function criarPainelFinanceiroPastor(){
+  initFinanceiro();
+  var filial=getFilialByUser(logado.user);
+  if(!filial) return null;
+
+  var p=document.createElement('div');p.className='painel';p.id='pfinanceiro';
+
+  var hoje=new Date();
+  var anoAtual=hoje.getFullYear();
+  var mesAtual=hoje.getMonth();
+
+  p.innerHTML='<div class="ph"><div class="ph-titulo">Relatório Financeiro</div>'+
+  '<div class="ph-desc">'+filial.nome+' — '+filial.pastor+'</div></div>'+
+
+  '<div class="card"><div class="card-titulo">Selecionar período</div>'+
+  '<div class="fr"><div class="fg"><label>Mês</label>'+
+  '<select id="fin-mes">'+MESES.map(function(m,i){return '<option value="'+i+'"'+(i===mesAtual?' selected':'')+'>'+m+'</option>';}).join('')+'</select></div>'+
+  '<div class="fg"><label>Ano</label>'+
+  '<select id="fin-ano">'+[anoAtual-1,anoAtual,anoAtual+1].map(function(a){return '<option value="'+a+'"'+(a===anoAtual?' selected':'')+'>'+a+'</option>';}).join('')+'</select></div>'+
+  '<div class="fg"><label>&nbsp;</label><button class="btn-salvar" onclick="carregarFormPastor('+filial.id+')" style="margin-top:0.35rem;">Carregar</button></div></div></div>'+
+
+  '<div id="fin-form-pastor"></div>';
+
+  setTimeout(function(){carregarFormPastor(filial.id);},100);
+  return p;
+}
+
+function carregarFormPastor(filialId){
+  var mes=parseInt(document.getElementById('fin-mes').value);
+  var ano=parseInt(document.getElementById('fin-ano').value);
+  var dados=getLancamento(filialId,ano,mes);
+  var saldo=(parseFloat(dados.dizimos)||0)+(parseFloat(dados.ofertas)||0)-(parseFloat(dados.despesas)||0)-(parseFloat(dados.repasse)||0);
+
+  var el=document.getElementById('fin-form-pastor');
+  if(!el)return;
+  el.innerHTML=
+  '<div class="card"><div class="card-titulo">Lançamentos — '+MESES[mes]+' / '+ano+'</div>'+
+
+  '<div class="fr"><div class="fg"><label>Dízimos recebidos (R$)</label>'+
+  '<input type="number" id="fin-dizimos" value="'+dados.dizimos+'" placeholder="0,00" min="0" step="0.01"/></div>'+
+  '<div class="fg"><label>Ofertas recebidas (R$)</label>'+
+  '<input type="number" id="fin-ofertas" value="'+dados.ofertas+'" placeholder="0,00" min="0" step="0.01"/></div></div>'+
+
+  '<div class="fr"><div class="fg"><label>Despesas da igreja (R$)</label>'+
+  '<input type="number" id="fin-despesas" value="'+dados.despesas+'" placeholder="0,00" min="0" step="0.01"/></div>'+
+  '<div class="fg"><label>Repasse para a sede (R$)</label>'+
+  '<input type="number" id="fin-repasse" value="'+dados.repasse+'" placeholder="0,00" min="0" step="0.01"/></div></div>'+
+
+  '<div class="fr um"><div class="fg"><label>Observações</label>'+
+  '<textarea id="fin-obs" placeholder="Anotações do mês...">'+dados.obs+'</textarea></div></div>'+
+
+  '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-top:0.5rem;">'+
+  '<button class="btn-salvar" onclick="salvarFormPastor('+filialId+')">&#10003; Salvar lançamento</button>'+
+  '<div style="background:var(--deep3);border-radius:10px;padding:0.8rem 1.2rem;border:1px solid var(--border);">'+
+  '<span style="font-size:0.75rem;color:var(--muted);">Saldo do mês: </span>'+
+  '<span id="fin-saldo-preview" style="font-size:1.1rem;font-weight:500;color:'+(saldo>=0?'var(--green)':'var(--red)')+';">R$ '+formatMoeda(saldo)+'</span></div></div></div>'+
+
+  // Mini histórico
+  '<div class="card"><div class="card-titulo">Histórico do ano — '+ano+'</div>'+
+  '<div id="fin-historico-pastor"></div></div>';
+
+  renderHistoricoPastor(filialId,ano);
+
+  // Atualizar saldo em tempo real
+  ['fin-dizimos','fin-ofertas','fin-despesas','fin-repasse'].forEach(function(id){
+    var input=document.getElementById(id);
+    if(input) input.addEventListener('input',function(){
+      var dz=parseFloat(document.getElementById('fin-dizimos').value)||0;
+      var of=parseFloat(document.getElementById('fin-ofertas').value)||0;
+      var dp=parseFloat(document.getElementById('fin-despesas').value)||0;
+      var rp=parseFloat(document.getElementById('fin-repasse').value)||0;
+      var s=dz+of-dp-rp;
+      var el2=document.getElementById('fin-saldo-preview');
+      if(el2){el2.textContent='R$ '+formatMoeda(s);el2.style.color=s>=0?'var(--green)':'var(--red)';}
+    });
+  });
+}
+
+function salvarFormPastor(filialId){
+  var mes=parseInt(document.getElementById('fin-mes').value);
+  var ano=parseInt(document.getElementById('fin-ano').value);
+  salvarLancamento(filialId,ano,mes,{
+    dizimos:parseFloat(document.getElementById('fin-dizimos').value)||0,
+    ofertas:parseFloat(document.getElementById('fin-ofertas').value)||0,
+    despesas:parseFloat(document.getElementById('fin-despesas').value)||0,
+    repasse:parseFloat(document.getElementById('fin-repasse').value)||0,
+    obs:document.getElementById('fin-obs').value
+  });
+  renderHistoricoPastor(filialId,ano);
+  toast('Lançamento salvo!');
+}
+
+function renderHistoricoPastor(filialId,ano){
+  var el=document.getElementById('fin-historico-pastor');if(!el)return;
+  el.innerHTML='<table style="width:100%;font-size:0.82rem;border-collapse:collapse;">'+
+  '<thead><tr style="border-bottom:1px solid var(--border);">'+
+  '<th style="text-align:left;padding:0.5rem 0.3rem;color:var(--muted);font-weight:500;">Mês</th>'+
+  '<th style="text-align:right;padding:0.5rem 0.3rem;color:var(--muted);font-weight:500;">Dízimos</th>'+
+  '<th style="text-align:right;padding:0.5rem 0.3rem;color:var(--muted);font-weight:500;">Ofertas</th>'+
+  '<th style="text-align:right;padding:0.5rem 0.3rem;color:var(--muted);font-weight:500;">Despesas</th>'+
+  '<th style="text-align:right;padding:0.5rem 0.3rem;color:var(--muted);font-weight:500;">Repasse</th>'+
+  '<th style="text-align:right;padding:0.5rem 0.3rem;color:var(--muted);font-weight:500;">Saldo</th>'+
+  '</tr></thead><tbody>';
+
+  MESES.forEach(function(m,i){
+    var dados=getLancamento(filialId,ano,i);
+    var temDados=dados.dizimos||dados.ofertas||dados.despesas||dados.repasse;
+    if(!temDados)return;
+    var saldo=(dados.dizimos||0)+(dados.ofertas||0)-(dados.despesas||0)-(dados.repasse||0);
+    el.innerHTML+='<tr style="border-bottom:1px solid rgba(201,168,76,0.08);">'+
+    '<td style="padding:0.5rem 0.3rem;color:var(--text);">'+m+'</td>'+
+    '<td style="text-align:right;padding:0.5rem 0.3rem;color:var(--green);">R$ '+formatMoeda(dados.dizimos)+'</td>'+
+    '<td style="text-align:right;padding:0.5rem 0.3rem;color:var(--green);">R$ '+formatMoeda(dados.ofertas)+'</td>'+
+    '<td style="text-align:right;padding:0.5rem 0.3rem;color:var(--red);">R$ '+formatMoeda(dados.despesas)+'</td>'+
+    '<td style="text-align:right;padding:0.5rem 0.3rem;color:var(--blue);">R$ '+formatMoeda(dados.repasse)+'</td>'+
+    '<td style="text-align:right;padding:0.5rem 0.3rem;font-weight:500;color:'+(saldo>=0?'var(--green)':'var(--red)')+';">R$ '+formatMoeda(saldo)+'</td>'+
+    '</tr>';
+  });
+  el.innerHTML+='</tbody></table>';
+}
+
+// ── PAINEL FINANCEIRO ADMIN ──
+function criarPainelFinanceiroAdmin(){
+  initFinanceiro();
+  var p=document.createElement('div');p.className='painel';p.id='pfinanceiro';
+
+  var hoje=new Date();
+  var anoAtual=hoje.getFullYear();
+
+  p.innerHTML='<div class="ph"><div class="ph-titulo">Relatórios Financeiros</div>'+
+  '<div class="ph-desc">Visão consolidada de todas as filiais.</div></div>'+
+
+  '<div class="card"><div class="card-titulo">Filtros</div>'+
+  '<div class="fr"><div class="fg"><label>Ano</label>'+
+  '<select id="adm-fin-ano">'+[anoAtual-1,anoAtual,anoAtual+1].map(function(a){return '<option value="'+a+'"'+(a===anoAtual?' selected':'')+'>'+a+'</option>';}).join('')+'</select></div>'+
+  '<div class="fg"><label>Filial</label>'+
+  '<select id="adm-fin-filial"><option value="todas">Todas as filiais</option></select></div>'+
+  '<div class="fg"><label>&nbsp;</label><button class="btn-salvar" onclick="carregarRelatorioAdmin()" style="margin-top:0.35rem;">Gerar relatório</button></div></div></div>'+
+
+  // Cards de resumo
+  '<div id="adm-fin-cards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-bottom:1.5rem;"></div>'+
+
+  // Gráfico
+  '<div class="card"><div class="card-titulo">Gráfico de crescimento mensal</div>'+
+  '<canvas id="fin-chart" height="80"></canvas></div>'+
+
+  // Tabela por filial
+  '<div class="card"><div class="card-titulo">Detalhamento por filial</div>'+
+  '<div id="adm-fin-tabela"></div></div>'+
+
+  // Gestão de filiais
+  '<div class="card"><div class="card-titulo">Gerenciar filiais</div>'+
+  '<div id="adm-filiais-lista"></div>'+
+  '<div class="fr tres" style="margin-top:1rem;">'+
+  '<div class="fg"><label>Nome da filial</label><input type="text" id="nova-filial-nome" placeholder="Ex: Filial Leste"/></div>'+
+  '<div class="fg"><label>Nome do pastor</label><input type="text" id="nova-filial-pastor" placeholder="Ex: Pastor Marcos"/></div>'+
+  '<div class="fg"><label>Login do pastor</label><input type="text" id="nova-filial-user" placeholder="Ex: pastor4"/></div></div>'+
+  '<div class="fr" style="margin-top:0.5rem;">'+
+  '<div class="fg"><label>Senha do pastor</label><input type="password" id="nova-filial-pass" placeholder="••••••••"/></div>'+
+  '<div class="fg"><label>&nbsp;</label><button class="btn-salvar" onclick="addFilial()" style="margin-top:0.35rem;">&#10133; Adicionar filial</button></div></div></div>';
+
+  setTimeout(function(){
+    preencherSelectFiliais();
+    renderFiliaisLista();
+    carregarRelatorioAdmin();
+  },150);
+  return p;
+}
+
+function preencherSelectFiliais(){
+  var sel=document.getElementById('adm-fin-filial');if(!sel)return;
+  var d=db();if(!d.filiais)return;
+  sel.innerHTML='<option value="todas">Todas as filiais</option>';
+  d.filiais.forEach(function(f){
+    sel.innerHTML+='<option value="'+f.id+'">'+f.nome+'</option>';
+  });
+}
+
+function carregarRelatorioAdmin(){
+  var ano=parseInt(document.getElementById('adm-fin-ano').value);
+  var filialFiltro=document.getElementById('adm-fin-filial').value;
+  var d=db();if(!d.filiais)return;
+
+  var filiais=filialFiltro==='todas'?d.filiais:d.filiais.filter(function(f){return f.id==filialFiltro;});
+
+  // Calcular totais anuais
+  var totalDizimos=0,totalOfertas=0,totalDespesas=0,totalRepasse=0;
+  filiais.forEach(function(f){
+    MESES.forEach(function(m,i){
+      var dados=getLancamento(f.id,ano,i);
+      totalDizimos+=dados.dizimos||0;
+      totalOfertas+=dados.ofertas||0;
+      totalDespesas+=dados.despesas||0;
+      totalRepasse+=dados.repasse||0;
+    });
+  });
+  var totalSaldo=totalDizimos+totalOfertas-totalDespesas-totalRepasse;
+
+  // Cards resumo
+  var cards=document.getElementById('adm-fin-cards');
+  if(cards){
+    cards.innerHTML=[
+      {label:'Total dízimos',valor:totalDizimos,cor:'var(--green)'},
+      {label:'Total ofertas',valor:totalOfertas,cor:'var(--green)'},
+      {label:'Total despesas',valor:totalDespesas,cor:'var(--red)'},
+      {label:'Total repasses',valor:totalRepasse,cor:'var(--blue)'},
+      {label:'Saldo geral',valor:totalSaldo,cor:totalSaldo>=0?'var(--green)':'var(--red)'}
+    ].map(function(c){
+      return '<div style="background:var(--deep3);border:1px solid var(--border);border-radius:12px;padding:1rem;text-align:center;">'+
+      '<div style="font-size:0.72rem;color:var(--muted);margin-bottom:0.4rem;">'+c.label+'</div>'+
+      '<div style="font-size:1.2rem;font-weight:500;color:'+c.cor+';">R$ '+formatMoeda(c.valor)+'</div></div>';
+    }).join('');
+  }
+
+  // Gráfico mensal
+  renderGraficoAdmin(filiais,ano);
+
+  // Tabela por filial
+  var tabela=document.getElementById('adm-fin-tabela');
+  if(tabela){
+    tabela.innerHTML='<table style="width:100%;font-size:0.82rem;border-collapse:collapse;">'+
+    '<thead><tr style="border-bottom:1px solid var(--border);">'+
+    '<th style="text-align:left;padding:0.5rem 0.3rem;color:var(--muted);font-weight:500;">Filial</th>'+
+    '<th style="text-align:right;padding:0.5rem 0.3rem;color:var(--muted);font-weight:500;">Dízimos</th>'+
+    '<th style="text-align:right;padding:0.5rem 0.3rem;color:var(--muted);font-weight:500;">Ofertas</th>'+
+    '<th style="text-align:right;padding:0.5rem 0.3rem;color:var(--muted);font-weight:500;">Despesas</th>'+
+    '<th style="text-align:right;padding:0.5rem 0.3rem;color:var(--muted);font-weight:500;">Repasse</th>'+
+    '<th style="text-align:right;padding:0.5rem 0.3rem;color:var(--muted);font-weight:500;">Saldo</th>'+
+    '</tr></thead><tbody>';
+
+    filiais.forEach(function(f){
+      var fd=0,fo=0,fdp=0,frp=0;
+      MESES.forEach(function(m,i){
+        var dados=getLancamento(f.id,ano,i);
+        fd+=dados.dizimos||0;fo+=dados.ofertas||0;fdp+=dados.despesas||0;frp+=dados.repasse||0;
+      });
+      var fs=fd+fo-fdp-frp;
+      tabela.innerHTML+='<tr style="border-bottom:1px solid rgba(201,168,76,0.08);">'+
+      '<td style="padding:0.6rem 0.3rem;"><div style="color:var(--text);font-weight:500;">'+f.nome+'</div>'+
+      '<div style="font-size:0.72rem;color:var(--muted);">'+f.pastor+'</div></td>'+
+      '<td style="text-align:right;padding:0.6rem 0.3rem;color:var(--green);">R$ '+formatMoeda(fd)+'</td>'+
+      '<td style="text-align:right;padding:0.6rem 0.3rem;color:var(--green);">R$ '+formatMoeda(fo)+'</td>'+
+      '<td style="text-align:right;padding:0.6rem 0.3rem;color:var(--red);">R$ '+formatMoeda(fdp)+'</td>'+
+      '<td style="text-align:right;padding:0.6rem 0.3rem;color:var(--blue);">R$ '+formatMoeda(frp)+'</td>'+
+      '<td style="text-align:right;padding:0.6rem 0.3rem;font-weight:500;color:'+(fs>=0?'var(--green)':'var(--red)')+';">R$ '+formatMoeda(fs)+'</td>'+
+      '</tr>';
+    });
+    tabela.innerHTML+='</tbody></table>';
+  }
+}
+
+var chartInstance=null;
+function renderGraficoAdmin(filiais,ano){
+  var canvas=document.getElementById('fin-chart');if(!canvas)return;
+  if(chartInstance){chartInstance.destroy();chartInstance=null;}
+
+  var entradasPorMes=MESES.map(function(m,i){
+    var total=0;
+    filiais.forEach(function(f){
+      var dados=getLancamento(f.id,ano,i);
+      total+=(dados.dizimos||0)+(dados.ofertas||0);
+    });
+    return total;
+  });
+  var saldoPorMes=MESES.map(function(m,i){
+    var total=0;
+    filiais.forEach(function(f){
+      var dados=getLancamento(f.id,ano,i);
+      total+=(dados.dizimos||0)+(dados.ofertas||0)-(dados.despesas||0)-(dados.repasse||0);
+    });
+    return total;
+  });
+
+  if(typeof Chart==='undefined'){
+    var s=document.createElement('script');
+    s.src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js';
+    s.onload=function(){desenharChart(canvas,entradasPorMes,saldoPorMes);};
+    document.head.appendChild(s);
+  } else {
+    desenharChart(canvas,entradasPorMes,saldoPorMes);
+  }
+}
+
+function desenharChart(canvas,entradas,saldo){
+  chartInstance=new Chart(canvas,{
+    type:'bar',
+    data:{
+      labels:MESES.map(function(m){return m.substring(0,3);}),
+      datasets:[
+        {label:'Entradas (R$)',data:entradas,backgroundColor:'rgba(39,174,96,0.6)',borderColor:'rgba(39,174,96,1)',borderWidth:1,borderRadius:4},
+        {label:'Saldo (R$)',data:saldo,type:'line',borderColor:'#C9A84C',backgroundColor:'rgba(201,168,76,0.1)',borderWidth:2,tension:0.4,pointBackgroundColor:'#C9A84C',fill:true}
+      ]
+    },
+    options:{
+      responsive:true,
+      plugins:{legend:{labels:{color:'#9A9488',font:{size:11}}}},
+      scales:{
+        x:{ticks:{color:'#9A9488',font:{size:11}},grid:{color:'rgba(201,168,76,0.06)'}},
+        y:{ticks:{color:'#9A9488',font:{size:11},callback:function(v){return 'R$ '+formatMoeda(v);}},grid:{color:'rgba(201,168,76,0.06)'}}
+      }
+    }
+  });
+}
+
+// ── FILIAIS ──
+function renderFiliaisLista(){
+  var el=document.getElementById('adm-filiais-lista');if(!el)return;
+  var d=db();if(!d.filiais){el.innerHTML='';return;}
+  el.innerHTML='';
+  d.filiais.forEach(function(f,i){
+    var div=document.createElement('div');div.className='user-row';
+    div.innerHTML='<div class="user-info">'+
+      '<div class="user-av" style="background:rgba(52,152,219,0.15);color:#3498DB;">'+f.nome.substring(0,2).toUpperCase()+'</div>'+
+      '<div><div class="user-nome">'+f.nome+'<span class="role-badge pastor">Pastor</span></div>'+
+      '<div class="user-login">'+f.pastor+' — @'+f.user+'</div></div></div>'+
+      (i>2?'<button class="btn-perigo" onclick="removerFilial('+f.id+')">Remover</button>':'<span style="font-size:0.7rem;color:var(--muted);">filial padrão</span>');
+    el.appendChild(div);
+  });
+}
+
+function addFilial(){
+  var nome=document.getElementById('nova-filial-nome').value.trim();
+  var pastor=document.getElementById('nova-filial-pastor').value.trim();
+  var user=document.getElementById('nova-filial-user').value.trim();
+  var pass=document.getElementById('nova-filial-pass').value.trim();
+  if(!nome||!pastor||!user||!pass){alert('Preencha todos os campos.');return;}
+  var d=db();
+  if(!d.filiais) d.filiais=[];
+  if(d.usuarios.find(function(u){return u.user===user;})){alert('Esse usuário já existe.');return;}
+  var novoId=Date.now();
+  d.filiais.push({id:novoId,nome:nome,pastor:pastor,user:user});
+  d.usuarios.push({nome:pastor,user:user,pass:pass,role:'pastor',filialId:novoId});
+  gravarDb(d);
+  renderFiliaisLista();
+  preencherSelectFiliais();
+  document.getElementById('nova-filial-nome').value='';
+  document.getElementById('nova-filial-pastor').value='';
+  document.getElementById('nova-filial-user').value='';
+  document.getElementById('nova-filial-pass').value='';
+  toast('Filial e pastor adicionados!');
+}
+
+function removerFilial(id){
+  if(!confirm('Remover esta filial e seu pastor?'))return;
+  var d=db();
+  var f=d.filiais.find(function(x){return x.id===id;});
+  if(f){d.usuarios=d.usuarios.filter(function(u){return u.user!==f.user;});}
+  d.filiais=d.filiais.filter(function(x){return x.id!==id;});
+  gravarDb(d);renderFiliaisLista();preencherSelectFiliais();toast('Filial removida.');
+}
+
+// ── UTILITÁRIO ──
+function formatMoeda(v){
+  if(isNaN(v)||v===null||v===undefined) return '0,00';
+  return parseFloat(v).toFixed(2).replace('.',',').replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+}
+
+// ── INJETAR NOS PAINÉIS EXISTENTES ──
+var _origCarregarPainelAdm=carregarPainelAdm;
+carregarPainelAdm=function(){
+  _origCarregarPainelAdm();
+  initFinanceiro();
+
+  var mc=document.getElementById('adm-main-content');
+  var sb=document.getElementById('sidebar-adm');
+  if(!mc||!sb) return;
+
+  var isAdmin=logado.role==='admin';
+  var isPastor=logado.role==='pastor';
+
+  // Adicionar item financeiro no sidebar
+  var sbSection=document.createElement('div');sbSection.className='sb-section';sbSection.textContent='Financeiro';sb.appendChild(sbSection);
+  var sbItem=document.createElement('div');sbItem.className='sb-item';
+  sbItem.innerHTML='<span>&#128200;</span> Relatórios';
+  sb.appendChild(sbItem);
+
+  // Criar painel correto
+  var painelFin=isAdmin?criarPainelFinanceiroAdmin():criarPainelFinanceiroPastor();
+  if(painelFin){
+    mc.appendChild(painelFin);
+    sbItem.onclick=function(){irPara('pfinanceiro',sbItem);};
+  }
+};
+</script>
