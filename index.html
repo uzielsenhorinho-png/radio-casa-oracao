@@ -1133,73 +1133,54 @@ function confirmarPresenca(id, btn){
 </script>
 </body>
 </html>
-<!-- MÓDULO FINANCEIRO — injetado via script -->
+<!-- MÓDULO FINANCEIRO -->
 <script>
-// ══════════════════════════════════════
-// MÓDULO FINANCEIRO
-// ══════════════════════════════════════
+var MESES=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+var chartInstance=null;
 
-// Inicializa dados financeiros no banco se não existir
 function initFinanceiro(){
   var d=db();
   if(!d.filiais){
     d.filiais=[
-      {id:1,nome:'Filial Central',pastor:'Pastor João',user:'pastor'},
-      {id:2,nome:'Filial Norte',pastor:'Pastor Pedro',user:'pastor2'},
-      {id:3,nome:'Filial Sul',pastor:'Pastor Lucas',user:'pastor3'}
+      {id:1,nome:'Filial Central',pastor:'Pastor João',user:'pastor1',pass:'filial1234'},
+      {id:2,nome:'Filial Norte',pastor:'Pastor Pedro',user:'pastor2',pass:'filial1234'},
+      {id:3,nome:'Filial Sul',pastor:'Pastor Lucas',user:'pastor3',pass:'filial1234'}
     ];
   }
   if(!d.financeiro) d.financeiro={};
+  // Garantir que as filiais tenham usuários correspondentes
+  d.filiais.forEach(function(f){
+    if(!d.usuarios.find(function(u){return u.user===f.user;})){
+      d.usuarios.push({nome:f.pastor,user:f.user,pass:f.pass||'filial1234',role:'pastor',filialId:f.id});
+    }
+  });
   gravarDb(d);
 }
 
-var MESES=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-
-function chaveFinanceiro(filialId,ano,mes){return filialId+'_'+ano+'_'+mes;}
-
-function getLancamento(filialId,ano,mes){
-  var d=db();
-  var chave=chaveFinanceiro(filialId,ano,mes);
-  return d.financeiro[chave]||{dizimos:0,ofertas:0,despesas:0,repasse:0,obs:''};
-}
-
-function salvarLancamento(filialId,ano,mes,dados){
-  var d=db();
-  if(!d.financeiro) d.financeiro={};
-  d.financeiro[chaveFinanceiro(filialId,ano,mes)]=dados;
-  gravarDb(d);
-}
-
-function getFilialByUser(user){
-  var d=db();
-  if(!d.filiais) return null;
-  return d.filiais.find(function(f){return f.user===user;})||null;
-}
+function chaveF(filialId,ano,mes){return filialId+'_'+ano+'_'+mes;}
+function getLanc(filialId,ano,mes){var d=db();return d.financeiro[chaveF(filialId,ano,mes)]||{dizimos:0,ofertas:0,despesas:0,repasse:0,obs:''};}
+function salvarLanc(filialId,ano,mes,dados){var d=db();if(!d.financeiro)d.financeiro={};d.financeiro[chaveF(filialId,ano,mes)]=dados;gravarDb(d);}
+function getFilialByUser(user){var d=db();if(!d.filiais)return null;return d.filiais.find(function(f){return f.user===user;})||null;}
+function formatM(v){if(isNaN(v)||v===null||v===undefined)return '0,00';return parseFloat(v).toFixed(2).replace('.',',').replace(/\B(?=(\d{3})+(?!\d))/g,'.');}
 
 // ── PAINEL FINANCEIRO PASTOR ──
 function criarPainelFinanceiroPastor(){
   initFinanceiro();
   var filial=getFilialByUser(logado.user);
-  if(!filial) return null;
-
+  if(!filial)return null;
   var p=document.createElement('div');p.className='painel';p.id='pfinanceiro';
-
   var hoje=new Date();
   var anoAtual=hoje.getFullYear();
   var mesAtual=hoje.getMonth();
-
   p.innerHTML='<div class="ph"><div class="ph-titulo">Relatório Financeiro</div>'+
-  '<div class="ph-desc">'+filial.nome+' — '+filial.pastor+'</div></div>'+
-
-  '<div class="card"><div class="card-titulo">Selecionar período</div>'+
-  '<div class="fr"><div class="fg"><label>Mês</label>'+
-  '<select id="fin-mes">'+MESES.map(function(m,i){return '<option value="'+i+'"'+(i===mesAtual?' selected':'')+'>'+m+'</option>';}).join('')+'</select></div>'+
-  '<div class="fg"><label>Ano</label>'+
-  '<select id="fin-ano">'+[anoAtual-1,anoAtual,anoAtual+1].map(function(a){return '<option value="'+a+'"'+(a===anoAtual?' selected':'')+'>'+a+'</option>';}).join('')+'</select></div>'+
-  '<div class="fg"><label>&nbsp;</label><button class="btn-salvar" onclick="carregarFormPastor('+filial.id+')" style="margin-top:0.35rem;">Carregar</button></div></div></div>'+
-
-  '<div id="fin-form-pastor"></div>';
-
+    '<div class="ph-desc">'+filial.nome+' — '+filial.pastor+'</div></div>'+
+    '<div class="card"><div class="card-titulo">Selecionar período</div>'+
+    '<div class="fr"><div class="fg"><label>Mês</label>'+
+    '<select id="fin-mes">'+MESES.map(function(m,i){return '<option value="'+i+'"'+(i===mesAtual?' selected':'')+'>'+m+'</option>';}).join('')+'</select></div>'+
+    '<div class="fg"><label>Ano</label>'+
+    '<select id="fin-ano">'+[anoAtual-1,anoAtual,anoAtual+1].map(function(a){return '<option value="'+a+'"'+(a===anoAtual?' selected':'')+'>'+a+'</option>';}).join('')+'</select></div>'+
+    '<div class="fg"><label>&nbsp;</label><button class="btn-salvar" onclick="carregarFormPastor('+filial.id+')" style="margin-top:0.35rem;">Carregar</button></div></div></div>'+
+    '<div id="fin-form-pastor"></div>';
   setTimeout(function(){carregarFormPastor(filial.id);},100);
   return p;
 }
@@ -1207,50 +1188,32 @@ function criarPainelFinanceiroPastor(){
 function carregarFormPastor(filialId){
   var mes=parseInt(document.getElementById('fin-mes').value);
   var ano=parseInt(document.getElementById('fin-ano').value);
-  var dados=getLancamento(filialId,ano,mes);
+  var dados=getLanc(filialId,ano,mes);
   var saldo=(parseFloat(dados.dizimos)||0)+(parseFloat(dados.ofertas)||0)-(parseFloat(dados.despesas)||0)-(parseFloat(dados.repasse)||0);
-
-  var el=document.getElementById('fin-form-pastor');
-  if(!el)return;
+  var el=document.getElementById('fin-form-pastor');if(!el)return;
   el.innerHTML=
-  '<div class="card"><div class="card-titulo">Lançamentos — '+MESES[mes]+' / '+ano+'</div>'+
-
-  '<div class="fr"><div class="fg"><label>Dízimos recebidos (R$)</label>'+
-  '<input type="number" id="fin-dizimos" value="'+dados.dizimos+'" placeholder="0,00" min="0" step="0.01"/></div>'+
-  '<div class="fg"><label>Ofertas recebidas (R$)</label>'+
-  '<input type="number" id="fin-ofertas" value="'+dados.ofertas+'" placeholder="0,00" min="0" step="0.01"/></div></div>'+
-
-  '<div class="fr"><div class="fg"><label>Despesas da igreja (R$)</label>'+
-  '<input type="number" id="fin-despesas" value="'+dados.despesas+'" placeholder="0,00" min="0" step="0.01"/></div>'+
-  '<div class="fg"><label>Repasse para a sede (R$)</label>'+
-  '<input type="number" id="fin-repasse" value="'+dados.repasse+'" placeholder="0,00" min="0" step="0.01"/></div></div>'+
-
-  '<div class="fr um"><div class="fg"><label>Observações</label>'+
-  '<textarea id="fin-obs" placeholder="Anotações do mês...">'+dados.obs+'</textarea></div></div>'+
-
-  '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-top:0.5rem;">'+
-  '<button class="btn-salvar" onclick="salvarFormPastor('+filialId+')">&#10003; Salvar lançamento</button>'+
-  '<div style="background:var(--deep3);border-radius:10px;padding:0.8rem 1.2rem;border:1px solid var(--border);">'+
-  '<span style="font-size:0.75rem;color:var(--muted);">Saldo do mês: </span>'+
-  '<span id="fin-saldo-preview" style="font-size:1.1rem;font-weight:500;color:'+(saldo>=0?'var(--green)':'var(--red)')+';">R$ '+formatMoeda(saldo)+'</span></div></div></div>'+
-
-  // Mini histórico
-  '<div class="card"><div class="card-titulo">Histórico do ano — '+ano+'</div>'+
-  '<div id="fin-historico-pastor"></div></div>';
-
+    '<div class="card"><div class="card-titulo">Lançamentos — '+MESES[mes]+' / '+ano+'</div>'+
+    '<div class="fr"><div class="fg"><label>Dízimos recebidos (R$)</label><input type="number" id="fin-dizimos" value="'+dados.dizimos+'" placeholder="0,00" min="0" step="0.01"/></div>'+
+    '<div class="fg"><label>Ofertas recebidas (R$)</label><input type="number" id="fin-ofertas" value="'+dados.ofertas+'" placeholder="0,00" min="0" step="0.01"/></div></div>'+
+    '<div class="fr"><div class="fg"><label>Despesas da igreja (R$)</label><input type="number" id="fin-despesas" value="'+dados.despesas+'" placeholder="0,00" min="0" step="0.01"/></div>'+
+    '<div class="fg"><label>Repasse para a sede (R$)</label><input type="number" id="fin-repasse" value="'+dados.repasse+'" placeholder="0,00" min="0" step="0.01"/></div></div>'+
+    '<div class="fr um"><div class="fg"><label>Observações</label><textarea id="fin-obs" placeholder="Anotações do mês...">'+dados.obs+'</textarea></div></div>'+
+    '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-top:0.5rem;">'+
+    '<button class="btn-salvar" onclick="salvarFormPastor('+filialId+')">&#10003; Salvar lançamento</button>'+
+    '<div style="background:var(--deep3);border-radius:10px;padding:0.8rem 1.2rem;border:1px solid var(--border);">'+
+    '<span style="font-size:0.75rem;color:var(--muted);">Saldo do mês: </span>'+
+    '<span id="fin-saldo-preview" style="font-size:1.1rem;font-weight:500;color:'+(saldo>=0?'var(--green)':'var(--red)')+';">R$ '+formatM(saldo)+'</span></div></div></div>'+
+    '<div class="card"><div class="card-titulo">Histórico do ano — '+ano+'</div><div id="fin-historico-pastor"></div></div>';
   renderHistoricoPastor(filialId,ano);
-
-  // Atualizar saldo em tempo real
   ['fin-dizimos','fin-ofertas','fin-despesas','fin-repasse'].forEach(function(id){
-    var input=document.getElementById(id);
-    if(input) input.addEventListener('input',function(){
-      var dz=parseFloat(document.getElementById('fin-dizimos').value)||0;
-      var of=parseFloat(document.getElementById('fin-ofertas').value)||0;
-      var dp=parseFloat(document.getElementById('fin-despesas').value)||0;
-      var rp=parseFloat(document.getElementById('fin-repasse').value)||0;
-      var s=dz+of-dp-rp;
+    var inp=document.getElementById(id);
+    if(inp)inp.addEventListener('input',function(){
+      var s=(parseFloat(document.getElementById('fin-dizimos').value)||0)+
+            (parseFloat(document.getElementById('fin-ofertas').value)||0)-
+            (parseFloat(document.getElementById('fin-despesas').value)||0)-
+            (parseFloat(document.getElementById('fin-repasse').value)||0);
       var el2=document.getElementById('fin-saldo-preview');
-      if(el2){el2.textContent='R$ '+formatMoeda(s);el2.style.color=s>=0?'var(--green)':'var(--red)';}
+      if(el2){el2.textContent='R$ '+formatM(s);el2.style.color=s>=0?'var(--green)':'var(--red)';}
     });
   });
 }
@@ -1258,7 +1221,7 @@ function carregarFormPastor(filialId){
 function salvarFormPastor(filialId){
   var mes=parseInt(document.getElementById('fin-mes').value);
   var ano=parseInt(document.getElementById('fin-ano').value);
-  salvarLancamento(filialId,ano,mes,{
+  salvarLanc(filialId,ano,mes,{
     dizimos:parseFloat(document.getElementById('fin-dizimos').value)||0,
     ofertas:parseFloat(document.getElementById('fin-ofertas').value)||0,
     despesas:parseFloat(document.getElementById('fin-despesas').value)||0,
@@ -1271,78 +1234,55 @@ function salvarFormPastor(filialId){
 
 function renderHistoricoPastor(filialId,ano){
   var el=document.getElementById('fin-historico-pastor');if(!el)return;
-  el.innerHTML='<table style="width:100%;font-size:0.82rem;border-collapse:collapse;">'+
-  '<thead><tr style="border-bottom:1px solid var(--border);">'+
-  '<th style="text-align:left;padding:0.5rem 0.3rem;color:var(--muted);font-weight:500;">Mês</th>'+
-  '<th style="text-align:right;padding:0.5rem 0.3rem;color:var(--muted);font-weight:500;">Dízimos</th>'+
-  '<th style="text-align:right;padding:0.5rem 0.3rem;color:var(--muted);font-weight:500;">Ofertas</th>'+
-  '<th style="text-align:right;padding:0.5rem 0.3rem;color:var(--muted);font-weight:500;">Despesas</th>'+
-  '<th style="text-align:right;padding:0.5rem 0.3rem;color:var(--muted);font-weight:500;">Repasse</th>'+
-  '<th style="text-align:right;padding:0.5rem 0.3rem;color:var(--muted);font-weight:500;">Saldo</th>'+
-  '</tr></thead><tbody>';
-
+  var rows='';
   MESES.forEach(function(m,i){
-    var dados=getLancamento(filialId,ano,i);
-    var temDados=dados.dizimos||dados.ofertas||dados.despesas||dados.repasse;
-    if(!temDados)return;
+    var dados=getLanc(filialId,ano,i);
+    if(!dados.dizimos&&!dados.ofertas&&!dados.despesas&&!dados.repasse)return;
     var saldo=(dados.dizimos||0)+(dados.ofertas||0)-(dados.despesas||0)-(dados.repasse||0);
-    el.innerHTML+='<tr style="border-bottom:1px solid rgba(201,168,76,0.08);">'+
-    '<td style="padding:0.5rem 0.3rem;color:var(--text);">'+m+'</td>'+
-    '<td style="text-align:right;padding:0.5rem 0.3rem;color:var(--green);">R$ '+formatMoeda(dados.dizimos)+'</td>'+
-    '<td style="text-align:right;padding:0.5rem 0.3rem;color:var(--green);">R$ '+formatMoeda(dados.ofertas)+'</td>'+
-    '<td style="text-align:right;padding:0.5rem 0.3rem;color:var(--red);">R$ '+formatMoeda(dados.despesas)+'</td>'+
-    '<td style="text-align:right;padding:0.5rem 0.3rem;color:var(--blue);">R$ '+formatMoeda(dados.repasse)+'</td>'+
-    '<td style="text-align:right;padding:0.5rem 0.3rem;font-weight:500;color:'+(saldo>=0?'var(--green)':'var(--red)')+';">R$ '+formatMoeda(saldo)+'</td>'+
-    '</tr>';
+    rows+='<tr style="border-bottom:1px solid rgba(201,168,76,0.08);">'+
+      '<td style="padding:0.5rem 0.3rem;color:var(--text);">'+m+'</td>'+
+      '<td style="text-align:right;padding:0.5rem 0.3rem;color:var(--green);">R$ '+formatM(dados.dizimos)+'</td>'+
+      '<td style="text-align:right;padding:0.5rem 0.3rem;color:var(--green);">R$ '+formatM(dados.ofertas)+'</td>'+
+      '<td style="text-align:right;padding:0.5rem 0.3rem;color:var(--red);">R$ '+formatM(dados.despesas)+'</td>'+
+      '<td style="text-align:right;padding:0.5rem 0.3rem;color:#3498DB;">R$ '+formatM(dados.repasse)+'</td>'+
+      '<td style="text-align:right;padding:0.5rem 0.3rem;font-weight:500;color:'+(saldo>=0?'var(--green)':'var(--red)')+';">R$ '+formatM(saldo)+'</td></tr>';
   });
-  el.innerHTML+='</tbody></table>';
+  el.innerHTML=rows?'<table style="width:100%;font-size:0.82rem;border-collapse:collapse;">'+
+    '<thead><tr style="border-bottom:1px solid var(--border);">'+
+    '<th style="text-align:left;padding:0.5rem 0.3rem;color:var(--muted);font-weight:500;">Mês</th>'+
+    '<th style="text-align:right;padding:0.5rem 0.3rem;color:var(--muted);font-weight:500;">Dízimos</th>'+
+    '<th style="text-align:right;padding:0.5rem 0.3rem;color:var(--muted);font-weight:500;">Ofertas</th>'+
+    '<th style="text-align:right;padding:0.5rem 0.3rem;color:var(--muted);font-weight:500;">Despesas</th>'+
+    '<th style="text-align:right;padding:0.5rem 0.3rem;color:var(--muted);font-weight:500;">Repasse</th>'+
+    '<th style="text-align:right;padding:0.5rem 0.3rem;color:var(--muted);font-weight:500;">Saldo</th>'+
+    '</tr></thead><tbody>'+rows+'</tbody></table>':
+    '<p style="color:var(--muted);font-size:0.85rem;">Nenhum lançamento neste ano ainda.</p>';
 }
 
 // ── PAINEL FINANCEIRO ADMIN ──
 function criarPainelFinanceiroAdmin(){
   initFinanceiro();
   var p=document.createElement('div');p.className='painel';p.id='pfinanceiro';
-
-  var hoje=new Date();
-  var anoAtual=hoje.getFullYear();
-
+  var hoje=new Date();var anoAtual=hoje.getFullYear();
   p.innerHTML='<div class="ph"><div class="ph-titulo">Relatórios Financeiros</div>'+
-  '<div class="ph-desc">Visão consolidada de todas as filiais.</div></div>'+
-
-  '<div class="card"><div class="card-titulo">Filtros</div>'+
-  '<div class="fr"><div class="fg"><label>Ano</label>'+
-  '<select id="adm-fin-ano">'+[anoAtual-1,anoAtual,anoAtual+1].map(function(a){return '<option value="'+a+'"'+(a===anoAtual?' selected':'')+'>'+a+'</option>';}).join('')+'</select></div>'+
-  '<div class="fg"><label>Filial</label>'+
-  '<select id="adm-fin-filial"><option value="todas">Todas as filiais</option></select></div>'+
-  '<div class="fg"><label>&nbsp;</label><button class="btn-salvar" onclick="carregarRelatorioAdmin()" style="margin-top:0.35rem;">Gerar relatório</button></div></div></div>'+
-
-  // Cards de resumo
-  '<div id="adm-fin-cards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-bottom:1.5rem;"></div>'+
-
-  // Gráfico
-  '<div class="card"><div class="card-titulo">Gráfico de crescimento mensal</div>'+
-  '<canvas id="fin-chart" height="80"></canvas></div>'+
-
-  // Tabela por filial
-  '<div class="card"><div class="card-titulo">Detalhamento por filial</div>'+
-  '<div id="adm-fin-tabela"></div></div>'+
-
-  // Gestão de filiais
-  '<div class="card"><div class="card-titulo">Gerenciar filiais</div>'+
-  '<div id="adm-filiais-lista"></div>'+
-  '<div class="fr tres" style="margin-top:1rem;">'+
-  '<div class="fg"><label>Nome da filial</label><input type="text" id="nova-filial-nome" placeholder="Ex: Filial Leste"/></div>'+
-  '<div class="fg"><label>Nome do pastor</label><input type="text" id="nova-filial-pastor" placeholder="Ex: Pastor Marcos"/></div>'+
-  '<div class="fg"><label>Login do pastor</label><input type="text" id="nova-filial-user" placeholder="Ex: pastor4"/></div></div>'+
-  '<div class="fr" style="margin-top:0.5rem;">'+
-  '<div class="fg"><label>Senha do pastor</label><input type="password" id="nova-filial-pass" placeholder="••••••••"/></div>'+
-  '<div class="fg"><label>&nbsp;</label><button class="btn-salvar" onclick="addFilial()" style="margin-top:0.35rem;">&#10133; Adicionar filial</button></div></div></div>';
-
-  setTimeout(function(){
-    preencherSelectFiliais();
-    renderFiliaisLista();
-    carregarRelatorioAdmin();
-  },150);
+    '<div class="ph-desc">Visão consolidada de todas as filiais.</div></div>'+
+    '<div class="card"><div class="card-titulo">Filtros</div>'+
+    '<div class="fr tres"><div class="fg"><label>Ano</label>'+
+    '<select id="adm-fin-ano">'+[anoAtual-1,anoAtual,anoAtual+1].map(function(a){return '<option value="'+a+'"'+(a===anoAtual?' selected':'')+'>'+a+'</option>';}).join('')+'</select></div>'+
+    '<div class="fg"><label>Filial</label><select id="adm-fin-filial"><option value="todas">Todas as filiais</option></select></div>'+
+    '<div class="fg"><label>&nbsp;</label><button class="btn-salvar" onclick="carregarRelatorioAdmin()" style="margin-top:0.35rem;">Gerar relatório</button></div></div></div>'+
+    '<div id="adm-fin-cards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-bottom:1.5rem;"></div>'+
+    '<div class="card"><div class="card-titulo">Crescimento mensal</div><canvas id="fin-chart" height="80"></canvas></div>'+
+    '<div class="card"><div class="card-titulo">Detalhamento por filial</div><div id="adm-fin-tabela"></div></div>'+
+    '<div class="card"><div class="card-titulo">Gerenciar filiais</div>'+
+    '<div id="adm-filiais-lista" style="margin-bottom:1.2rem;"></div>'+
+    '<div class="fr quatro">'+
+    '<div class="fg"><label>Nome da filial</label><input type="text" id="nf-nome" placeholder="Ex: Filial Leste"/></div>'+
+    '<div class="fg"><label>Pastor responsável</label><input type="text" id="nf-pastor" placeholder="Ex: Pastor Marcos"/></div>'+
+    '<div class="fg"><label>Usuário (login)</label><input type="text" id="nf-user" placeholder="Ex: pastor4"/></div>'+
+    '<div class="fg"><label>Senha</label><input type="password" id="nf-pass" placeholder="••••••••"/></div></div>'+
+    '<button class="btn-salvar" onclick="addFilial()" style="margin-top:0.8rem;">&#10133; Adicionar filial</button></div>';
+  setTimeout(function(){preencherSelectFiliais();renderFiliaisLista();carregarRelatorioAdmin();},150);
   return p;
 }
 
@@ -1350,177 +1290,179 @@ function preencherSelectFiliais(){
   var sel=document.getElementById('adm-fin-filial');if(!sel)return;
   var d=db();if(!d.filiais)return;
   sel.innerHTML='<option value="todas">Todas as filiais</option>';
-  d.filiais.forEach(function(f){
-    sel.innerHTML+='<option value="'+f.id+'">'+f.nome+'</option>';
-  });
+  d.filiais.forEach(function(f){sel.innerHTML+='<option value="'+f.id+'">'+f.nome+'</option>';});
 }
 
 function carregarRelatorioAdmin(){
-  var ano=parseInt(document.getElementById('adm-fin-ano').value);
-  var filialFiltro=document.getElementById('adm-fin-filial').value;
+  var anoEl=document.getElementById('adm-fin-ano');
+  var filialEl=document.getElementById('adm-fin-filial');
+  if(!anoEl||!filialEl)return;
+  var ano=parseInt(anoEl.value);
+  var filialFiltro=filialEl.value;
   var d=db();if(!d.filiais)return;
-
   var filiais=filialFiltro==='todas'?d.filiais:d.filiais.filter(function(f){return f.id==filialFiltro;});
 
-  // Calcular totais anuais
-  var totalDizimos=0,totalOfertas=0,totalDespesas=0,totalRepasse=0;
+  var td=0,to=0,tdp=0,trp=0;
   filiais.forEach(function(f){
     MESES.forEach(function(m,i){
-      var dados=getLancamento(f.id,ano,i);
-      totalDizimos+=dados.dizimos||0;
-      totalOfertas+=dados.ofertas||0;
-      totalDespesas+=dados.despesas||0;
-      totalRepasse+=dados.repasse||0;
+      var dados=getLanc(f.id,ano,i);
+      td+=dados.dizimos||0;to+=dados.ofertas||0;tdp+=dados.despesas||0;trp+=dados.repasse||0;
     });
   });
-  var totalSaldo=totalDizimos+totalOfertas-totalDespesas-totalRepasse;
+  var ts=td+to-tdp-trp;
 
-  // Cards resumo
   var cards=document.getElementById('adm-fin-cards');
   if(cards){
     cards.innerHTML=[
-      {label:'Total dízimos',valor:totalDizimos,cor:'var(--green)'},
-      {label:'Total ofertas',valor:totalOfertas,cor:'var(--green)'},
-      {label:'Total despesas',valor:totalDespesas,cor:'var(--red)'},
-      {label:'Total repasses',valor:totalRepasse,cor:'var(--blue)'},
-      {label:'Saldo geral',valor:totalSaldo,cor:totalSaldo>=0?'var(--green)':'var(--red)'}
+      {label:'Total dízimos',valor:td,cor:'var(--green)'},
+      {label:'Total ofertas',valor:to,cor:'var(--green)'},
+      {label:'Total despesas',valor:tdp,cor:'var(--red)'},
+      {label:'Total repasses',valor:trp,cor:'#3498DB'},
+      {label:'Saldo geral',valor:ts,cor:ts>=0?'var(--green)':'var(--red)'}
     ].map(function(c){
       return '<div style="background:var(--deep3);border:1px solid var(--border);border-radius:12px;padding:1rem;text-align:center;">'+
-      '<div style="font-size:0.72rem;color:var(--muted);margin-bottom:0.4rem;">'+c.label+'</div>'+
-      '<div style="font-size:1.2rem;font-weight:500;color:'+c.cor+';">R$ '+formatMoeda(c.valor)+'</div></div>';
+        '<div style="font-size:0.72rem;color:var(--muted);margin-bottom:0.4rem;">'+c.label+'</div>'+
+        '<div style="font-size:1.2rem;font-weight:500;color:'+c.cor+';">R$ '+formatM(c.valor)+'</div></div>';
     }).join('');
   }
 
-  // Gráfico mensal
   renderGraficoAdmin(filiais,ano);
 
-  // Tabela por filial
   var tabela=document.getElementById('adm-fin-tabela');
   if(tabela){
-    tabela.innerHTML='<table style="width:100%;font-size:0.82rem;border-collapse:collapse;">'+
-    '<thead><tr style="border-bottom:1px solid var(--border);">'+
-    '<th style="text-align:left;padding:0.5rem 0.3rem;color:var(--muted);font-weight:500;">Filial</th>'+
-    '<th style="text-align:right;padding:0.5rem 0.3rem;color:var(--muted);font-weight:500;">Dízimos</th>'+
-    '<th style="text-align:right;padding:0.5rem 0.3rem;color:var(--muted);font-weight:500;">Ofertas</th>'+
-    '<th style="text-align:right;padding:0.5rem 0.3rem;color:var(--muted);font-weight:500;">Despesas</th>'+
-    '<th style="text-align:right;padding:0.5rem 0.3rem;color:var(--muted);font-weight:500;">Repasse</th>'+
-    '<th style="text-align:right;padding:0.5rem 0.3rem;color:var(--muted);font-weight:500;">Saldo</th>'+
-    '</tr></thead><tbody>';
-
+    var rows='';
     filiais.forEach(function(f){
       var fd=0,fo=0,fdp=0,frp=0;
-      MESES.forEach(function(m,i){
-        var dados=getLancamento(f.id,ano,i);
-        fd+=dados.dizimos||0;fo+=dados.ofertas||0;fdp+=dados.despesas||0;frp+=dados.repasse||0;
-      });
+      MESES.forEach(function(m,i){var dados=getLanc(f.id,ano,i);fd+=dados.dizimos||0;fo+=dados.ofertas||0;fdp+=dados.despesas||0;frp+=dados.repasse||0;});
       var fs=fd+fo-fdp-frp;
-      tabela.innerHTML+='<tr style="border-bottom:1px solid rgba(201,168,76,0.08);">'+
-      '<td style="padding:0.6rem 0.3rem;"><div style="color:var(--text);font-weight:500;">'+f.nome+'</div>'+
-      '<div style="font-size:0.72rem;color:var(--muted);">'+f.pastor+'</div></td>'+
-      '<td style="text-align:right;padding:0.6rem 0.3rem;color:var(--green);">R$ '+formatMoeda(fd)+'</td>'+
-      '<td style="text-align:right;padding:0.6rem 0.3rem;color:var(--green);">R$ '+formatMoeda(fo)+'</td>'+
-      '<td style="text-align:right;padding:0.6rem 0.3rem;color:var(--red);">R$ '+formatMoeda(fdp)+'</td>'+
-      '<td style="text-align:right;padding:0.6rem 0.3rem;color:var(--blue);">R$ '+formatMoeda(frp)+'</td>'+
-      '<td style="text-align:right;padding:0.6rem 0.3rem;font-weight:500;color:'+(fs>=0?'var(--green)':'var(--red)')+';">R$ '+formatMoeda(fs)+'</td>'+
-      '</tr>';
+      rows+='<tr style="border-bottom:1px solid rgba(201,168,76,0.08);">'+
+        '<td style="padding:0.6rem 0.3rem;"><div style="color:var(--text);font-weight:500;">'+f.nome+'</div>'+
+        '<div style="font-size:0.72rem;color:var(--muted);">'+f.pastor+' — @'+f.user+'</div></td>'+
+        '<td style="text-align:right;padding:0.6rem 0.3rem;color:var(--green);">R$ '+formatM(fd)+'</td>'+
+        '<td style="text-align:right;padding:0.6rem 0.3rem;color:var(--green);">R$ '+formatM(fo)+'</td>'+
+        '<td style="text-align:right;padding:0.6rem 0.3rem;color:var(--red);">R$ '+formatM(fdp)+'</td>'+
+        '<td style="text-align:right;padding:0.6rem 0.3rem;color:#3498DB;">R$ '+formatM(frp)+'</td>'+
+        '<td style="text-align:right;padding:0.6rem 0.3rem;font-weight:500;color:'+(fs>=0?'var(--green)':'var(--red)')+';">R$ '+formatM(fs)+'</td></tr>';
     });
-    tabela.innerHTML+='</tbody></table>';
+    tabela.innerHTML='<table style="width:100%;font-size:0.82rem;border-collapse:collapse;">'+
+      '<thead><tr style="border-bottom:1px solid var(--border);">'+
+      '<th style="text-align:left;padding:0.5rem 0.3rem;color:var(--muted);font-weight:500;">Filial / Pastor</th>'+
+      '<th style="text-align:right;padding:0.5rem 0.3rem;color:var(--muted);font-weight:500;">Dízimos</th>'+
+      '<th style="text-align:right;padding:0.5rem 0.3rem;color:var(--muted);font-weight:500;">Ofertas</th>'+
+      '<th style="text-align:right;padding:0.5rem 0.3rem;color:var(--muted);font-weight:500;">Despesas</th>'+
+      '<th style="text-align:right;padding:0.5rem 0.3rem;color:var(--muted);font-weight:500;">Repasse</th>'+
+      '<th style="text-align:right;padding:0.5rem 0.3rem;color:var(--muted);font-weight:500;">Saldo</th>'+
+      '</tr></thead><tbody>'+(rows||'<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:1rem;">Nenhum lançamento ainda.</td></tr>')+
+      '</tbody></table>';
   }
 }
 
-var chartInstance=null;
 function renderGraficoAdmin(filiais,ano){
   var canvas=document.getElementById('fin-chart');if(!canvas)return;
   if(chartInstance){chartInstance.destroy();chartInstance=null;}
-
-  var entradasPorMes=MESES.map(function(m,i){
-    var total=0;
-    filiais.forEach(function(f){
-      var dados=getLancamento(f.id,ano,i);
-      total+=(dados.dizimos||0)+(dados.ofertas||0);
+  var entradas=MESES.map(function(m,i){var t=0;filiais.forEach(function(f){var d=getLanc(f.id,ano,i);t+=(d.dizimos||0)+(d.ofertas||0);});return t;});
+  var saldos=MESES.map(function(m,i){var t=0;filiais.forEach(function(f){var d=getLanc(f.id,ano,i);t+=(d.dizimos||0)+(d.ofertas||0)-(d.despesas||0)-(d.repasse||0);});return t;});
+  function desenhar(){
+    chartInstance=new Chart(canvas,{
+      type:'bar',
+      data:{
+        labels:MESES.map(function(m){return m.substring(0,3);}),
+        datasets:[
+          {label:'Entradas (R$)',data:entradas,backgroundColor:'rgba(39,174,96,0.55)',borderColor:'rgba(39,174,96,1)',borderWidth:1,borderRadius:4},
+          {label:'Saldo (R$)',data:saldos,type:'line',borderColor:'#C9A84C',backgroundColor:'rgba(201,168,76,0.08)',borderWidth:2,tension:0.4,pointBackgroundColor:'#C9A84C',fill:true}
+        ]
+      },
+      options:{responsive:true,plugins:{legend:{labels:{color:'#9A9488',font:{size:11}}}},
+        scales:{x:{ticks:{color:'#9A9488',font:{size:11}},grid:{color:'rgba(201,168,76,0.06)'}},
+          y:{ticks:{color:'#9A9488',font:{size:11},callback:function(v){return 'R$'+formatM(v);}},grid:{color:'rgba(201,168,76,0.06)'}}}}
     });
-    return total;
-  });
-  var saldoPorMes=MESES.map(function(m,i){
-    var total=0;
-    filiais.forEach(function(f){
-      var dados=getLancamento(f.id,ano,i);
-      total+=(dados.dizimos||0)+(dados.ofertas||0)-(dados.despesas||0)-(dados.repasse||0);
-    });
-    return total;
-  });
-
-  if(typeof Chart==='undefined'){
-    var s=document.createElement('script');
-    s.src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js';
-    s.onload=function(){desenharChart(canvas,entradasPorMes,saldoPorMes);};
-    document.head.appendChild(s);
-  } else {
-    desenharChart(canvas,entradasPorMes,saldoPorMes);
   }
+  if(typeof Chart==='undefined'){var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js';s.onload=desenhar;document.head.appendChild(s);}
+  else desenhar();
 }
 
-function desenharChart(canvas,entradas,saldo){
-  chartInstance=new Chart(canvas,{
-    type:'bar',
-    data:{
-      labels:MESES.map(function(m){return m.substring(0,3);}),
-      datasets:[
-        {label:'Entradas (R$)',data:entradas,backgroundColor:'rgba(39,174,96,0.6)',borderColor:'rgba(39,174,96,1)',borderWidth:1,borderRadius:4},
-        {label:'Saldo (R$)',data:saldo,type:'line',borderColor:'#C9A84C',backgroundColor:'rgba(201,168,76,0.1)',borderWidth:2,tension:0.4,pointBackgroundColor:'#C9A84C',fill:true}
-      ]
-    },
-    options:{
-      responsive:true,
-      plugins:{legend:{labels:{color:'#9A9488',font:{size:11}}}},
-      scales:{
-        x:{ticks:{color:'#9A9488',font:{size:11}},grid:{color:'rgba(201,168,76,0.06)'}},
-        y:{ticks:{color:'#9A9488',font:{size:11},callback:function(v){return 'R$ '+formatMoeda(v);}},grid:{color:'rgba(201,168,76,0.06)'}}
-      }
-    }
-  });
-}
-
-// ── FILIAIS ──
 function renderFiliaisLista(){
   var el=document.getElementById('adm-filiais-lista');if(!el)return;
   var d=db();if(!d.filiais){el.innerHTML='';return;}
   el.innerHTML='';
-  d.filiais.forEach(function(f,i){
+  d.filiais.forEach(function(f){
     var div=document.createElement('div');div.className='user-row';
-    div.innerHTML='<div class="user-info">'+
-      '<div class="user-av" style="background:rgba(52,152,219,0.15);color:#3498DB;">'+f.nome.substring(0,2).toUpperCase()+'</div>'+
-      '<div><div class="user-nome">'+f.nome+'<span class="role-badge pastor">Pastor</span></div>'+
-      '<div class="user-login">'+f.pastor+' — @'+f.user+'</div></div></div>'+
-      (i>2?'<button class="btn-perigo" onclick="removerFilial('+f.id+')">Remover</button>':'<span style="font-size:0.7rem;color:var(--muted);">filial padrão</span>');
+    div.innerHTML=
+      '<div class="user-info">'+
+        '<div class="user-av" style="background:rgba(52,152,219,0.15);color:#3498DB;">'+f.nome.substring(0,2).toUpperCase()+'</div>'+
+        '<div>'+
+          '<div class="user-nome">'+f.nome+'<span class="role-badge pastor">Pastor</span></div>'+
+          '<div class="user-login">'+f.pastor+' &nbsp;|&nbsp; login: <strong style="color:var(--gold-light)">@'+f.user+'</strong> &nbsp;|&nbsp; senha: <strong style="color:var(--gold-light)">'+f.pass+'</strong></div>'+
+        '</div>'+
+      '</div>'+
+      '<div style="display:flex;gap:0.5rem;align-items:center;">'+
+        '<button class="btn-ghost" onclick="editarFilial('+f.id+')" style="font-size:0.78rem;">&#9998; Editar</button>'+
+        '<button class="btn-perigo" onclick="removerFilial('+f.id+')">Remover</button>'+
+      '</div>';
     el.appendChild(div);
   });
 }
 
-function addFilial(){
-  var nome=document.getElementById('nova-filial-nome').value.trim();
-  var pastor=document.getElementById('nova-filial-pastor').value.trim();
-  var user=document.getElementById('nova-filial-user').value.trim();
-  var pass=document.getElementById('nova-filial-pass').value.trim();
+function editarFilial(id){
+  var d=db();var f=d.filiais.find(function(x){return x.id===id;});if(!f)return;
+  document.getElementById('nf-nome').value=f.nome;
+  document.getElementById('nf-pastor').value=f.pastor;
+  document.getElementById('nf-user').value=f.user;
+  document.getElementById('nf-pass').value=f.pass||'';
+  // Muda botão para modo edição
+  var btn=document.querySelector('[onclick="addFilial()"]');
+  if(btn){
+    btn.textContent='Salvar edição';
+    btn.setAttribute('onclick','salvarEdicaoFilial('+id+')');
+  }
+}
+
+function salvarEdicaoFilial(id){
+  var nome=document.getElementById('nf-nome').value.trim();
+  var pastor=document.getElementById('nf-pastor').value.trim();
+  var user=document.getElementById('nf-user').value.trim();
+  var pass=document.getElementById('nf-pass').value.trim();
   if(!nome||!pastor||!user||!pass){alert('Preencha todos os campos.');return;}
   var d=db();
-  if(!d.filiais) d.filiais=[];
-  if(d.usuarios.find(function(u){return u.user===user;})){alert('Esse usuário já existe.');return;}
+  var fIdx=d.filiais.findIndex(function(x){return x.id===id;});
+  var oldUser=d.filiais[fIdx].user;
+  // Atualizar filial
+  d.filiais[fIdx]={id:id,nome:nome,pastor:pastor,user:user,pass:pass};
+  // Atualizar ou criar usuário
+  var uIdx=d.usuarios.findIndex(function(u){return u.user===oldUser;});
+  if(uIdx>-1){d.usuarios[uIdx]={nome:pastor,user:user,pass:pass,role:'pastor',filialId:id};}
+  else{d.usuarios.push({nome:pastor,user:user,pass:pass,role:'pastor',filialId:id});}
+  gravarDb(d);
+  renderFiliaisLista();preencherSelectFiliais();
+  // Resetar botão
+  var btn=document.querySelector('[onclick^="salvarEdicaoFilial"]');
+  if(btn){btn.textContent='+ Adicionar filial';btn.setAttribute('onclick','addFilial()');}
+  document.getElementById('nf-nome').value='';document.getElementById('nf-pastor').value='';
+  document.getElementById('nf-user').value='';document.getElementById('nf-pass').value='';
+  toast('Filial atualizada!');
+}
+
+function addFilial(){
+  var nome=document.getElementById('nf-nome').value.trim();
+  var pastor=document.getElementById('nf-pastor').value.trim();
+  var user=document.getElementById('nf-user').value.trim();
+  var pass=document.getElementById('nf-pass').value.trim();
+  if(!nome||!pastor||!user||!pass){alert('Preencha todos os campos.');return;}
+  var d=db();
+  if(!d.filiais)d.filiais=[];
+  if(d.usuarios.find(function(u){return u.user===user;})){alert('Esse usuário já existe. Escolha outro login.');return;}
   var novoId=Date.now();
-  d.filiais.push({id:novoId,nome:nome,pastor:pastor,user:user});
+  d.filiais.push({id:novoId,nome:nome,pastor:pastor,user:user,pass:pass});
   d.usuarios.push({nome:pastor,user:user,pass:pass,role:'pastor',filialId:novoId});
   gravarDb(d);
-  renderFiliaisLista();
-  preencherSelectFiliais();
-  document.getElementById('nova-filial-nome').value='';
-  document.getElementById('nova-filial-pastor').value='';
-  document.getElementById('nova-filial-user').value='';
-  document.getElementById('nova-filial-pass').value='';
-  toast('Filial e pastor adicionados!');
+  renderFiliaisLista();preencherSelectFiliais();
+  document.getElementById('nf-nome').value='';document.getElementById('nf-pastor').value='';
+  document.getElementById('nf-user').value='';document.getElementById('nf-pass').value='';
+  toast('Filial adicionada! Login: @'+user+' / Senha: '+pass);
 }
 
 function removerFilial(id){
-  if(!confirm('Remover esta filial e seu pastor?'))return;
+  if(!confirm('Remover esta filial e o acesso do seu pastor?'))return;
   var d=db();
   var f=d.filiais.find(function(x){return x.id===id;});
   if(f){d.usuarios=d.usuarios.filter(function(u){return u.user!==f.user;});}
@@ -1528,36 +1470,19 @@ function removerFilial(id){
   gravarDb(d);renderFiliaisLista();preencherSelectFiliais();toast('Filial removida.');
 }
 
-// ── UTILITÁRIO ──
-function formatMoeda(v){
-  if(isNaN(v)||v===null||v===undefined) return '0,00';
-  return parseFloat(v).toFixed(2).replace('.',',').replace(/\B(?=(\d{3})+(?!\d))/g,'.');
-}
-
-// ── INJETAR NOS PAINÉIS EXISTENTES ──
-var _origCarregarPainelAdm=carregarPainelAdm;
+// ── INJETAR NO PAINEL EXISTENTE ──
+var _origAdm=carregarPainelAdm;
 carregarPainelAdm=function(){
-  _origCarregarPainelAdm();
+  _origAdm();
   initFinanceiro();
-
   var mc=document.getElementById('adm-main-content');
   var sb=document.getElementById('sidebar-adm');
-  if(!mc||!sb) return;
-
-  var isAdmin=logado.role==='admin';
-  var isPastor=logado.role==='pastor';
-
-  // Adicionar item financeiro no sidebar
-  var sbSection=document.createElement('div');sbSection.className='sb-section';sbSection.textContent='Financeiro';sb.appendChild(sbSection);
-  var sbItem=document.createElement('div');sbItem.className='sb-item';
-  sbItem.innerHTML='<span>&#128200;</span> Relatórios';
-  sb.appendChild(sbItem);
-
-  // Criar painel correto
-  var painelFin=isAdmin?criarPainelFinanceiroAdmin():criarPainelFinanceiroPastor();
-  if(painelFin){
-    mc.appendChild(painelFin);
-    sbItem.onclick=function(){irPara('pfinanceiro',sbItem);};
-  }
+  if(!mc||!sb)return;
+  var sec=document.createElement('div');sec.className='sb-section';sec.textContent='Financeiro';sb.appendChild(sec);
+  var item=document.createElement('div');item.className='sb-item';item.innerHTML='<span>&#128200;</span> Relatórios';sb.appendChild(item);
+  var painel=logado.role==='admin'?criarPainelFinanceiroAdmin():criarPainelFinanceiroPastor();
+  if(painel){mc.appendChild(painel);item.onclick=function(){irPara('pfinanceiro',item);};}
 };
 </script>
+</body>
+</html>
